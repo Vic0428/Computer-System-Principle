@@ -175,4 +175,6 @@ It is because the principle of UNIX programming
 
 1. [CSP Lecture 1](https://ipads.se.sjtu.edu.cn/courses/csp/slides/CSP_01_Introduction.pptx)
 2. [MapReduce: A major step backwards](https://homes.cs.washington.edu/~billhowe/mapreduce_a_major_step_backwards.html)
-
+3. [Kernel](https://en.wikipedia.org/wiki/Kernel_(operating_system))
+4. [ShellShock](https://en.wikipedia.org/wiki/Shellshock_(software_bug))
+5. [ExoKernels](https://medium.com/@vithushaaarabhi/exokernels-an-operating-system-architecture-for-application-level-resource-management-32d0daaeeab0)
