@@ -89,6 +89,16 @@ Focus on problem, let **library** deal with messy details.
    - Spanner 
    - Dataflow (MapReduce is retired in Google)
 
+### MapReduce: A major step backwards
+
+But for database community
+
+- A giant step backward in the programming paradigm for large scale data-intensive applications
+- A sub-optimal implementation, in that it uses brute force instead of indexing
+- Not novel at all (similar ideas 25 years ago)
+- Missing most of features included in current DBMS
+- Incompatible with all of the tools DBMS users have come to depend on
+
 ### Another Principle
 
 Design for iteration
@@ -164,4 +174,5 @@ It is because the principle of UNIX programming
 ## Reference
 
 1. [CSP Lecture 1](https://ipads.se.sjtu.edu.cn/courses/csp/slides/CSP_01_Introduction.pptx)
+2. [MapReduce: A major step backwards](https://homes.cs.washington.edu/~billhowe/mapreduce_a_major_step_backwards.html)
 
