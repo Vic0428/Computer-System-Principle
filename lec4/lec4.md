@@ -32,7 +32,7 @@ File system tree
 
 ### The big picture of file system
 
-<img src="../../../../../../../note.assets/image-20200113212038094.png" alt="image-20200113212038094" style="zoom:50%;" />
+<img src="lec4.assets/image-20200113212038094.png" alt="image-20200113212038094" style="zoom:50%;" />
 
 ### Abstraction: API of UNIX file system
 
@@ -161,7 +161,7 @@ But we need to get better performance
 <img src="lec4.assets/image-20200115082456917.png" alt="image-20200115082456917" style="zoom:33%;" />
 
 So we need to flush the disk
-![image-20200115082655059](../../note.assets/image-20200115082655059.png)
+![image-20200115082655059](lec4.assets/image-20200115082655059.png)
 
 ## Logging / Journaling
 
