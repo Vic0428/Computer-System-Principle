@@ -77,3 +77,32 @@ Compare three different kinds of kernels
 2. The ease of creation and mixing libOSes could lead to code messes
 3. Customer support is harder than before
    - What’s OS you are choosing?
+
+## Flexible System Call
+
+Flexible System Call Scheduling with Exception-Less System Calls, OSDI'10
+
+### Motivation
+
+1. How to further reduce the latency of `syscall`
+   - Mostly of the state switch (from kernel mode to user mode)
+   - Cache pollution
+2. Could we do `syscall` without state switching?
+
+### Overview
+
+1. Introduce `system-call-page` that is shared by user and kernel
+   - User threads can **push** the system call requests into the system call page
+   - Kernel threads will **poll** the system call requests out the system call page
+2. Another way of `syscall`
+   ![image-20200122151133878](lec2.assets/image-20200122151133878.png)
+
+
+
+## Reference
+
+1. [CSP Lecture 2](https://ipads.se.sjtu.edu.cn/courses/csp/slides/CSP_02_OS_Structure.pptx)
+2. [MIT-Exokernel](https://pdos.csail.mit.edu/archive/exo/)
+
+2. [Flex-SC](https://www.usenix.org/conference/osdi10/flexsc-flexible-system-call-scheduling-exception-less-system-calls)
+
