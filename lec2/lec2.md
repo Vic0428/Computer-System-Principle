@@ -97,7 +97,76 @@ Flexible System Call Scheduling with Exception-Less System Calls, OSDI'10
 2. Another way of `syscall`
    ![image-20200122151133878](lec2.assets/image-20200122151133878.png)
 
+## Xen: The art of virtualization
 
+### What is virtualization
+
+1. What is virtualization
+   - OS can run inside virtual machines, implemented by virtual machine monitors (VMMs)
+   - Guest os
+   - Host os
+2. Virtual machines differ from physical machines
+   - They don’t provide the guest OS exclusive access to underlying physical machine
+   - They don’t provide the guest OS with privileged access to physical machine
+3. The virtual machine monitor (VMM) is
+   - A piece of software running on host OS
+   - Can allow guest OS to be run as an application
+   - Alongside with other applications
+
+### Why virtualization
+
+Coupling between hardware and OS
+
+1. Hard to run multiple OS on the same machine
+2. Difficult to transfer software updates setups to another machine
+3. Messy to adjust hardware resources on system needs
+4. Require static, up-provision of machine resources
+
+Lack of true isolation between multiple applications
+
+1. Operating system “leaks” a lot of information between processes through the file system and other channels
+2. Multiple application may require specific software packages to run
+3. Certain applications have very specific operating systems configuration and tuning requirements
+4. In some cases, software vendors will not provide support if you are running their precious applications alongside **anything** else
+
+### VMM
+
+In 1974
+
+1. Fidelity
+   - Executes identically as on real hardware
+2. Performance
+   - Achieve good performance on most instructions
+3. Safety
+   - Manage all hardware resources
+
+### Three approaches to Virtualization
+
+1. Full virtualization
+   - Should be able to run on **unmodified guest** OS
+   - Example: virtual box
+2. Para-virtualization
+   - Include small changes to the guest OS to improve performance
+   - Example: Amazon EC2, Xen
+3. Container virtualization
+   - Namespace and other isolation
+
+### Full virtualization
+
+1. Why hard?
+   - How to handle traps by applications running in the guest OS?
+     (How trap jump to host OS???)
+   - Guest OS will try to execute privilege instructions -> trap and emulation
+     - The CPU traps the instruction due to privileged instructions
+     - The trap is handled by VMM
+     - Assuming the guest OS is doing something legitimate, the VMM adjusts the VM state and continues the guest OS
+2. Getting traps
+   - All traps and exceptions originating inside the VM must be handled by VMM
+   - Most of the guest applications and guest OS simply use the physical processor normally (The cpu architecture is the same)
+     - Most instructions use the CPU directly (not via host OS)
+
+3. VMware solution: binary translation
+   - During guest OS execution scan code pages for non-virtualizable instructions and rewrite them for safe instruction sequences
 
 ## Reference
 
@@ -105,4 +174,5 @@ Flexible System Call Scheduling with Exception-Less System Calls, OSDI'10
 2. [MIT-Exokernel](https://pdos.csail.mit.edu/archive/exo/)
 
 2. [Flex-SC](https://www.usenix.org/conference/osdi10/flexsc-flexible-system-call-scheduling-exception-less-system-calls)
+3. [Xen](https://www.youtube.com/watch?v=2moUsgMOie4)
 
