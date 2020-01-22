@@ -131,7 +131,7 @@ Lack of true isolation between multiple applications
 
 ### VMM
 
-In 1974
+A software-abstraction layer that partitions the HW into one or more virtual machines
 
 1. Fidelity
    - Executes identically as on real hardware
@@ -168,6 +168,39 @@ In 1974
 3. VMware solution: binary translation
    - During guest OS execution scan code pages for non-virtualizable instructions and rewrite them for safe instruction sequences
 
+### Xen
+
+1. Xen’s Goals
+   - Multiplexing resources at the granularity of entire OS
+     - As opposed to process-level multiplexing
+     - Price: high overhead
+   - Target: 100 virtual machines per physical machine
+2. Para-virtualization
+   - Provides some exposure to the underlying hardware
+   - Better performance
+   - Need modifications to the OS
+   - No need modifications to the application
+3. Memory management
+   - Software managed TLB
+   - Xen exists at the top 64MB of every address space
+4. CPU
+   - Ring-1 for the OS, Ring-3 for the application
+   - System call handler and page fault handler registered to Xen
+5. Device I/O
+   - Xen exposes a set of simple device abstractions
+   - One driver for each type of device
+     - Network
+     - Disk
+     - Console
+6. Control management
+   ![image-20200122205309228](lec2.assets/image-20200122205309228.png)
+   - Domain-0 hosts the application level management software
+   - Creation and deletion of virtual network interfaces and block devices
+7. Control transfer
+   - Hypercalls: synchronous calls from Domain to Xen
+   - Events: asynchronous notifications from Xen to domains
+     - Replace device interrupts
+
 ## Reference
 
 1. [CSP Lecture 2](https://ipads.se.sjtu.edu.cn/courses/csp/slides/CSP_02_OS_Structure.pptx)
@@ -175,4 +208,3 @@ In 1974
 
 2. [Flex-SC](https://www.usenix.org/conference/osdi10/flexsc-flexible-system-call-scheduling-exception-less-system-calls)
 3. [Xen](https://www.youtube.com/watch?v=2moUsgMOie4)
-
