@@ -170,16 +170,22 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
 
 ### Xen
 
-1. Xen’s Goals
-   - Multiplexing resources at the granularity of entire OS
-     - As opposed to process-level multiplexing
-     - Price: high overhead
-   - Target: 100 virtual machines per physical machine
-2. Para-virtualization
-   - Provides some exposure to the underlying hardware
-   - Better performance
-   - Need modifications to the OS
-   - No need modifications to the application
+#### Overview
+
+1. Full virtualization is the wrong way.
+2. X86 never full virtualization
+3. Para-virtualization
+   - Small changes to the guest OS and big improvements in performance. But application binary interface won’t change!
+
+#### Design principles
+
+1. No changing standard ABI
+2. Support full multi-applications operating systems
+3. Para-virtualization is necessary to obtain high performance and strong resource isolation. 
+4. Introduce the idea of hypervisor (running on bare metal)
+
+#### Summary of changes
+
 3. Memory management
    - Software managed TLB
    - Xen exists at the top 64MB of every address space
