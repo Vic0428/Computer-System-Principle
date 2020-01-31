@@ -12,6 +12,8 @@ Lecture 2: [OS Structure](lec2/lec2.md)
 
 Lecture 4: [File System](lec4/lec4.md)
 
+Lecture 6: [Virtualization](lec6/lec6.md)
+
 Lecture 14: [Data Privacy](lec14/lec14.md)
 
 Lecture 16: [Learned Index](lec16/lec16.md)
