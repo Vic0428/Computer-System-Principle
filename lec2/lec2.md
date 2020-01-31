@@ -228,6 +228,6 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
 
 1. [CSP Lecture 2](https://ipads.se.sjtu.edu.cn/courses/csp/slides/CSP_02_OS_Structure.pptx)
 2. [MIT-Exokernel](https://pdos.csail.mit.edu/archive/exo/)
-
 2. [Flex-SC](https://www.usenix.org/conference/osdi10/flexsc-flexible-system-call-scheduling-exception-less-system-calls)
 3. [Xen](https://www.youtube.com/watch?v=2moUsgMOie4)
+5. [Prof. Geoffrey's notes](https://www.ops-class.org/slides/2017-04-26-xen/)
