@@ -185,10 +185,10 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
 
 #### Overview
 
-1. Full virtualization is the wrong way.
+1. Full virtualization is the wrong way. And there are some situations in which it is desirable for the guest os to see real as well as virtual resources
 2. X86 never full virtualization
 3. Para-virtualization
-   - Small changes to the guest OS and big improvements in performance. But application binary interface won’t change!
+   - **Small** changes to the guest OS and **big** improvements in performance. But application binary interface won’t change!
 
 #### Design principles
 
@@ -196,6 +196,7 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
 2. Support full multi-applications operating systems
 3. Para-virtualization is necessary to obtain high performance and strong resource isolation. 
 4. Introduce the idea of hypervisor (running on bare metal)
+5. But the **application binary interface** (ABI) doesn’t change!
 
 #### Summary of changes
 
@@ -219,6 +220,9 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
    - Hypercalls: synchronous calls from Domain to Xen
    - Events: asynchronous notifications from Xen to domains
      - Replace device interrupts
+8. Para VS. Full Virtualization
+   - Full virtualization: don’t change the OS… except at runtime!
+   - Paravirtualization: minimal changes to the OS, which sometimes result in better interaction between the OS and virtual hardware. 
 
 ## Reference
 
