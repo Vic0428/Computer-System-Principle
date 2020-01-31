@@ -102,25 +102,29 @@ Flexible System Call Scheduling with Exception-Less System Calls, OSDI'10
 ### What is virtualization
 
 1. What is virtualization
-   - OS can run inside virtual machines, implemented by virtual machine monitors (VMMs)
+   - OS can run inside **virtual machines**, implemented by **virtual machine monitors** (VMMs)
    - Guest os
    - Host os
 2. Virtual machines differ from physical machines
-   - They don’t provide the guest OS exclusive access to underlying physical machine
-   - They don’t provide the guest OS with privileged access to physical machine
+   - They **don’t** provide the guest OS **exclusive access** to underlying physical machine
+   - They **don’t** provide the guest OS with **privileged access** to physical machine
 3. The virtual machine monitor (VMM) is
    - A piece of software running on host OS
    - Can allow guest OS to be run as an application
-   - Alongside with other applications
+   - Alongside with other **applications**
 
 ### Why virtualization
 
-Coupling between hardware and OS
+#### Hardware Coupling
+
+**Coupling** between hardware and OS
 
 1. Hard to run multiple OS on the same machine
 2. Difficult to transfer software updates setups to another machine
 3. Messy to adjust hardware resources on system needs
 4. Require static, up-provision of machine resources
+
+#### Application Isolation
 
 Lack of true isolation between multiple applications
 
@@ -149,7 +153,7 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
    - Include small changes to the guest OS to improve performance
    - Example: Amazon EC2, Xen
 3. Container virtualization
-   - Namespace and other isolation
+   - Namespace and other isolation performed by the operating system to isolate sets of applications from each other
 
 ### Full virtualization
 
@@ -160,13 +164,22 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
      - The CPU traps the instruction due to privileged instructions
      - The trap is handled by VMM
      - Assuming the guest OS is doing something legitimate, the VMM adjusts the VM state and continues the guest OS
-2. Getting traps
+       - We refer to an instruction set having this property as **classically virtualizable**
+       - We refer to the approach described above as **trap and emulate**
+2. Trap and Emulate
+   - If the trap is called by an **application**, pass the trap to the guest OS
+   - If the trap is caused by an **guest OS**, handle the trap by adjusting the state of virtual machine
+3. Getting traps
    - All traps and exceptions originating inside the VM must be handled by VMM
    - Most of the guest applications and guest OS simply use the physical processor normally (The cpu architecture is the same)
      - Most instructions use the CPU directly (not via host OS)
 
-3. VMware solution: binary translation
+4. The x86 architecture is not classically virtualizable
+   - Some instructions **did not trap correctly**
+   - Others had **different side effects** when run in kernel or user mode
+5. VMware solution: binary translation
    - During guest OS execution scan code pages for non-virtualizable instructions and rewrite them for safe instruction sequences
+   - Cache translations to improve performance
 
 ### Xen
 
