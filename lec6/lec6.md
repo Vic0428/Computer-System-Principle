@@ -257,13 +257,43 @@ For example
 
 ![image-20200201143652043](lec6.assets/image-20200201143652043.png)
 
+Pros
+
+- Platform stability (good for migration)
+- Allows interposition
+- No special hardware support  is needed
+
+Cons
+
+- Can be very very slow! (Since it’s software emulated)
+
 ### Para-virtualized
 
 Split the drivers to guest and host
 
+VMM offers new type of device
+
+- The guest OS will run a new driver (front-end driver)
+- The VMM will run a back-end driver for each front-end
+- The VMM will finally run device driver to drive the device
+
+![image-20200201143954368](lec6.assets/image-20200201143954368.png)
+
 ### Hardware assisted
 
 Self-virtualization device
+
+VMM
+
+- An SR-IOV-capable device can configured to appear in the PCI configuration space as multiple functions
+
+VM
+
+- The VMM assigns one or more VFs to a VM by mapping the actual configurations space of the VFs to the configuration space presented to the virtual machine by the VMM
+
+![image-20200201144225229](lec6.assets/image-20200201144225229.png)
+
+## Virtualization Technologies
 
 ## Container Virtualization
 
