@@ -1,5 +1,74 @@
 # 6. Virtualization
 
+## Introduction to virtualization
+
+### Virtualization layers
+
+![image-20200201111947912](lec6.assets/image-20200201111947912.png)
+
+Machine from the perspective of a system
+
+- ISA provides interface between system and machine
+  ![image-20200201112124322](lec6.assets/image-20200201112124322.png)
+- Design space (level vs. ISA)
+  ![image-20200201112213061](lec6.assets/image-20200201112213061.png)
+- As for system VMs and same ISA -> there are two kinds of virtual machines
+  - Classic system VMs
+    - Run directly on hardware
+    - High performance
+    - Eg: Xen, VMWare ESX Server
+    - A.K.A Type 1
+      ![image-20200201112442649](lec6.assets/image-20200201112442649.png)
+  - Hosted VMs
+    - Ease of construction/installation
+    - Eg: VMware Workstation
+    - A.K.A Type 2
+      ![image-20200201112504124](lec6.assets/image-20200201112504124.png)
+
+### Virtual Machine Monitor
+
+1. The usage
+
+   - For managing VMs which running guest OS
+
+   - VMM runs underlying VMs (higher privilege)
+
+     ![image-20200201112714557](lec6.assets/image-20200201112714557.png)
+
+2. Virtualize hardware
+
+   - CPU
+   - Memory
+   - Device
+
+3. And there are several different architectures of VMM
+   ![image-20200201112813668](lec6.assets/image-20200201112813668.png)
+
+4. Principles in 1974
+
+   - Efficiency
+     - Innocuous instructions should execute directly on hardware
+   - Resource control
+     - Executed programs may not affect the system resources
+   - Equivalence
+     - The behavior of a program executing under the VMM should be the same as if the program were executed directly on the hardware (except possibly timing and resource availability)
+
+   ![image-20200201113107908](lec6.assets/image-20200201113107908.png)
+
+   ​							*“an efficient, isolated duplicate of the real machine”*
+
+## CPU Virtualization
+
+1. OS VS. VMM
+   - Similarities
+     - Multiplex hardware
+     - Higher privilege
+   - Differences
+     - Different abstraction
+     - VMM schedules VMs, OS schedule processes
+2. How does OS use the CPU?
+   - Each process thinks it has the 
+
 ## Container Virtualization
 
 ### Review: Hardware Virtualization
