@@ -145,6 +145,126 @@ But **X86 is not strictly virtualizable** (17 tricky instructions)
 
    ![image-20200201115931357](lec6.assets/image-20200201115931357.png)
 
+## Memory Virtualization
+
+How to virtualize the page tables?
+Terminology: 3 types of address now
+GVA (Guest virtual) -> GPA (Guest physical) -> HPA (Host physical)
+
+### Shadow paging
+
+Shadow page table maintain mapping from GVA to HPA
+
+![image-20200201120437418](lec6.assets/image-20200201120437418.png)
+
+Two page tables now become **one**
+
+1. VMM intercepts guest OS setting the virtual CR3
+2. VMM iterates over the guest page table, constructs a corresponding shadow page table
+3. In shadow PT, every guest physical address is translated into host physical address
+4. Finally, VMM loads the physical address of the shadow page table
+
+The number of shadow page tables
+
+- Shadow page tables are per application
+- Guest page tables are per application
+- Host page tables are per VM
+
+VMM needs to intercept when guest OS modifies page table, and updates the shadow page table accordingly
+
+- Mark the guest table pages as read-only (in the shadow page table)
+- If guest OS tries to modify its page tables, it triggers page fault
+- VMM handles the page fault by updating shadow page table
+
+Split a shadow page table to two tables
+
+- One for user and one for kernel
+- When guest OS switches to user mode, VMM will switch the shadow page table as well
+- Recall trap & emulate
+
+### Direct paging
+
+1. Positive
+
+   - Easy to implement and more clear architecture
+   - Better performance: guest can batch to reduce trap
+
+   Negatives
+
+   - Not transparent to the guest  OS
+   - The guest now knows much info like HPA
+     - May use such info to trigger **rowhammer** attacks
+
+2. Para-Virtualization
+
+### New hardware
+
+1. Hardware implementation
+
+   - Intel’s EPT (Extended Page Table)
+   - AMD’s NPT (Nested Page Table)
+
+2. Another table
+
+   - EPT for translation from GPA to HPGA
+   - EPT is controlled by the hypervisor
+   - EPT is per-VM
+
+   ![image-20200201142519672](lec6.assets/image-20200201142519672.png)
+
+3. Issue: EPT increases Memory Access
+
+   - One memory access from the guest VM may lead up to 20 memory accesses
+
+## I/O Virtualization
+
+1. Goal: Multiplexing device to guest VMs
+   Challenges
+   - Each guest OS has its own driver
+   - How can one device be controlled by multiple drivers
+   - What if one guest OS tries to format its disk?
+
+### Direct access
+
+VM owns a device exclusively
+![image-20200201143121985](lec6.assets/image-20200201143121985.png)
+
+IOMMU: Page Tables for Devices
+
+VT-d architecture defines a multi-level page-table structure for DMA address translation. 
+
+![image-20200201143345767](lec6.assets/image-20200201143345767.png)
+
+Positives
+
+- Fast, since the VM uses device just as native machine
+- Simplify monitor: limited device drivers needed
+
+Negatives
+
+- Hardware interface visible to guest (bad for migration)
+- Interposition is hard by definition (no way to trap and emulate)
+- Now you need much more devices (imagine 100 VMs)
+
+### Device emulation
+
+VMM emulates device in software
+
+For example
+
+- VMware emulates a 8139 network card for VMs
+- Since 8139 is widely used, almost every OS hat its driver
+
+![image-20200201143652043](lec6.assets/image-20200201143652043.png)
+
+### Para-virtualized
+
+Split the drivers to guest and host
+
+### Hardware assisted
+
+Self-virtualization device
+
 ## Container Virtualization
 
 ### Review: Hardware Virtualization
