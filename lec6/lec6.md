@@ -295,6 +295,14 @@ VM
 
 ## Virtualization Technologies
 
+The evolution of intel virtualization technology
+
+![image-20200201144526364](lec6.assets/image-20200201144526364.png)
+
+Software-emulation, Para-Virtualization, Hardware assisted?
+
+![image-20200201144438094](lec6.assets/image-20200201144438094.png)
+
 ## Container Virtualization
 
 ### Review: Hardware Virtualization
@@ -404,4 +412,5 @@ Docker builds on previous technologies
 
 ## Reference
 
-1. [Prof. Geoffrey Challen’s notes](https://www.ops-class.org/slides/2017-04-28-containers/)
+1. [CSP Lecture6 Slides](https://ipads.se.sjtu.edu.cn/courses/csp/slides/CSP_06_Virtualization.pptx)
+2. [Prof. Geoffrey Challen’s notes](https://www.ops-class.org/slides/2017-04-28-containers/)
