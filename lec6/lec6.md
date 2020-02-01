@@ -67,7 +67,83 @@ Machine from the perspective of a system
      - Different abstraction
      - VMM schedules VMs, OS schedule processes
 2. How does OS use the CPU?
-   - Each process thinks it has the 
+   - Each process thinks it has the entire CPU
+     - Does not care other  processes
+   - OS schedules the processes
+     - OS splits the CPU time to time-slices
+     - Schedule each process preemptively
+     - Save context, find next, restore context
+
+### Can run it as an application? (OS on OS)
+
+![image-20200201113636055](lec6.assets/image-20200201113636055.png)
+
+However, stuck at the privileged instructions and cannot run in user mode. 
+![image-20200201113752002](lec6.assets/image-20200201113752002.png)
+
+Solution: Trap & Emulate
+
+1. Trap: running privilege instructions will trap to the VMM
+2. Emulate: those instructions are implemented as functions in the VMM
+3. System states are kept in VMM’s memory, and are changed according
+   ![image-20200201113949618](lec6.assets/image-20200201113949618.png)
+
+Now we can run os as an application
+
+- Host OS virtualizes system states
+  - Save guest system states in memory
+- OS can deliver interrupt to a guest OS
+  - Similar as delivering a signal to an application
+
+But not all architectures are **strictly virtualizable**
+An ISA is strictly virtualizable if when executed in a lesser privileged mode
+
+- All instructions that access privileged state trap
+- All instructions either trap or execute identically
+
+But **X86 is not strictly virtualizable** (17 tricky instructions)
+
+#### Deal with the 17 tricky instructions
+
+1. Instruction interpretation: emulate them by software
+
+   - Emulate all the system status using memory
+   - None guest instruction executes directly on hardware
+   - Negatives: very slow (not meet the performance expectation!)
+
+2. Binary translation: translate them to other instructions
+
+   - Translation before execution
+   - Translation unit is basic block
+   - Each basic block -> code cache
+   - Translate the 17 instructions to function calls
+     - Implemented by the VMM
+   - Issues with binary translation
+     - PC synchronization on interrupts
+       - Now interrupt will only happen at basic block boundary\
+       - But on real machine, interrupt may happen at any instruction
+     - Carefully handle self-modifying code
+       - Notified on writes to translated guest code
+   - Architecture
+
+   ![image-20200201115146414](lec6.assets/image-20200201115146414.png)
+
+3. Para-virtualization: replace them in the source code
+
+   - Modify OS and let it cooperate with the VMM
+     - Change sensitive instructions to calls to the VMM
+       - Also known as **hypercall**
+     - Hypercall can be seen as trap
+   - Eg: Xen
+
+4. New hardware: change the CPU to fix the behavior
+
+   - VMX **root** operation
+     - Fully privileged, intended for virtual machine monitor
+   - VMX **non-root** operation
+     - Not fully privileged, intended for guest software
+
+   ![image-20200201115931357](lec6.assets/image-20200201115931357.png)
 
 ## Container Virtualization
 
