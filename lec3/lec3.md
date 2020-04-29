@@ -127,6 +127,83 @@
      - Consider calls between services
        ![image-20200429150121598](lec3.assets/image-20200429150121598.png)
 
+## What do Micro Kernels Have?
+
+1. Most system services are **implemented in user level**, so the **Microkernel size is very small**. 
+2. L4 Family Microkernel
+   ![image-20200429162757765](lec3.assets/image-20200429162757765.png)
+   - L4 Micro kernel is the most fully evolved **micro kernel**. 
+   - Two active open-source groups
+     - UNSW
+     - TU Dresden
+3. L4 Concepts
+   - **A microkernel does no real work**
+     - Kernel only provides **inevitable mechanisms**
+     - **Kernel does not enforce policies**
+
+### Case study: L4/Fiasco.OC
+
+1. Everything is an object  (Like `Every thing is a file descriptor` in Unix) => An abstraction
+
+   - Task -> Address Space
+   - Thread -> Scheduling
+   - IPC Gate -> Communication
+   - IRQ -> Communication
+
+   One system call: `invoke_object()`
+
+2. Kernel only provide limited objects
+
+   - Threads
+   - Tasks
+   - IRQs
+   - IPC Gate: **Generic Communication Object**
+     - Send message from **sender** and **receiver**
+     - Used to implement **new objects in user-level applications **
+
+3. User level objects
+   ![image-20200429165152954](lec3.assets/image-20200429165152954.png)
+
+   - Kernel even doesn’t know user level objects (like networking stack and file system)
+
+4. How to call objects?
+
+   - A simple idea
+     ![image-20200429165845672](lec3.assets/image-20200429165845672.png)
+   - Local names for Objects
+     ![image-20200429165950667](lec3.assets/image-20200429165950667.png)
+     - Namespace is **per-task**
+   - Object Capabilities
+     ![image-20200429171039515](lec3.assets/image-20200429171039515.png)
+   - Communication
+     ![image-20200429171154860](lec3.assets/image-20200429171154860.png)
+   - Capabilities (Local Names)
+     ![image-20200429171318506](lec3.assets/image-20200429171318506.png)
+     - Each process used local name and **capability table** to find the true object and used IPC gate. 
+
+## Go deeper into details
+
+1. Abstraction in Micro-kernel
+
+   - Object
+   - Capability
+   - IPC
+
+2. Abstraction: Thread (Abstraction provided by kernel)
+
+   - An independent flow of control **inside an address space**
+   - Communicates with other threads **using IPC**
+   - Characterized by **a set of registers and the thread state**
+   - Dispatched by the kernel **according to a defined schedule**
+
+   Implementation in L4/NOVA
+   ![image-20200429172128871](lec3.assets/image-20200429172128871.png)
+
+   Thread Variants
+   ![image-20200429172319286](lec3.assets/image-20200429172319286.png)
+
+3. 
+
 ## Microkernel - Mach
 
 1. Mach kernel
