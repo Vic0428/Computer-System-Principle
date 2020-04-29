@@ -202,7 +202,115 @@
    Thread Variants
    ![image-20200429172319286](lec3.assets/image-20200429172319286.png)
 
-3. 
+   - Global thread is similar to thread in Linux (need schedule context to scheduled by internal scheduler)
+   - Local thread doesn’t have schedule context and internal scheduler can not schedule **local thread** actively. 
+
+3. Portals
+
+   - A portal is an IPC endpoint (One kind of **IPC Gate**)
+   - Executed by local threads
+   - CPU time is donated from caller
+   - Called via system call
+   - Message is transferred from send UTCP to receiver UTCP
+
+   ![image-20200429220440420](lec3.assets/image-20200429220440420.png)
+
+   Kernel schedules **schedule context**. When global thread call portal, and it will **allow local thread to use its schedule context**. Also local thread can calls **portal** and passed schedule context to it. 
+
+### IPC
+
+1. Microkernel Performance Problem
+   ![image-20200429221059438](lec3.assets/image-20200429221059438.png)
+
+2. Improving IPC by Kernel Design
+
+   - **IPC is the most important operation in a microkernel**
+   - **The way to make IPC fast is to design the whole system around it**
+   - **Design principle: aim at a concrete performance goal**
+   - **Applied to the L3 kernel**
+
+3. L3/L4 Implementation Techniques
+   ![image-20200429221317800](lec3.assets/image-20200429221317800.png)
+
+   ![image-20200429221417822](lec3.assets/image-20200429221417822.png)
+
+4. Result (L3)
+   ![image-20200429221454581](lec3.assets/image-20200429221454581.png)
+
+5. Lightweight RPC (LRPC): Basic Concepts
+   ![image-20200429221546142](lec3.assets/image-20200429221546142.png)
+
+#### L4/Fiasco.OC IPC
+
+1. New IPC Design
+   ![image-20200429221645744](lec3.assets/image-20200429221645744.png)
+
+2. Three kinds of IPC
+
+   - Register IPC
+
+     ![image-20200429221808351](lec3.assets/image-20200429221808351.png)
+
+   - Kernel Memory IPC
+
+     ![image-20200429221828994](lec3.assets/image-20200429221828994.png)
+
+   - Shared Memory IPC
+
+     ![image-20200429221852235](lec3.assets/image-20200429221852235.png)
+
+3. Comparison of them
+   ![image-20200429221928646](lec3.assets/image-20200429221928646.png)
+
+4. Usage of IPC in L4/NOVA
+   ![image-20200429222013857](lec3.assets/image-20200429222013857.png)
+
+### Abstraction: Capabilities
+
+1. Capability
+   - Answer two questions
+     - How do you find/access resources?
+     - How do you restrict access to resources?
+   - Give each subject **a local namespace**
+   - Operations to **exchange objects** between namespaces
+   - **Permission** depends on what you have
+2. Overview
+   ![image-20200429222733831](lec3.assets/image-20200429222733831.png)
+   - Delegate: **copy**
+   - Grant: **move**
+3. Hierarchical Memory Capability
+   ![image-20200429222839718](lec3.assets/image-20200429222839718.png)
+
+### Memory Management
+
+1. Page Fault Handling
+
+   ![image-20200429222935819](lec3.assets/image-20200429222935819.png)
+
+2. Pagers blocking waits for page fault messages
+   ![image-20200429223017367](lec3.assets/image-20200429223017367.png)
+
+3. Memory Mapping
+   ![image-20200429223047212](lec3.assets/image-20200429223047212.png)
+
+4. User-Level Pagers
+   ![image-20200429223127292](lec3.assets/image-20200429223127292.png)
+
+   ![image-20200429223147732](lec3.assets/image-20200429223147732.png)
+
+5. How does the kernel know **which pager is responsible for handling a fault **?
+
+   - Another layer of indirection: Region Mapper
+
+     ![image-20200429223327442](lec3.assets/image-20200429223327442.png)
+
+   - Region Mapper and Page Faults
+
+     - Step-1: All threads of a task **have the RM assigned as their pager**
+
+     - Step-2: Fiasco.OC redirects all page faults to the RM
+
+     - Step-3: RM then uses **synchronous IPC calls** to obtain real memory mappings from the external pager responsible for a region
 
 ## Microkernel - Mach
 
@@ -282,6 +390,12 @@
    - Because driver is not in the kernel (microkernel design). `75%` code of Linux kernel are driver program.  
    - Now totally target for **embedding system**
    - **Micro kernel is good for scalability** ( better in distributed system and network system)
+
+## Summary
+
+1. Architecture: **move as much thing as possible out of kernel**
+2. Capability and IPC are **two core abstractions**
+3. **Make IPC as fast as possible**
 
 ## Reference
 
