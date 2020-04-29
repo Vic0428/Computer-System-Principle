@@ -10,6 +10,8 @@ Lecture 1: [Complexity VS. Simplicity](lec1/lec1.md)
 
 Lecture 2: [OS Structure](lec2/lec2.md)
 
+Lecture 3: [Micro Kernel](lec3/lec3.md)
+
 Lecture 4: [File System](lec4/lec4.md)
 
 Lecture 6: [Virtualization](lec6/lec6.md)
