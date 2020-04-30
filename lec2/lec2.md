@@ -1,5 +1,50 @@
 # 2. OS Structure
 
+## Monolithic Kernel
+
+1. Take `Unix` as an example!
+
+   - First in assembly language
+   - Next in `B` language
+   - Finally in `C` language
+
+   ![image-20200430184645754](lec2.assets/image-20200430184645754.png)
+
+2. Unix Family
+   ![image-20200430184704193](lec2.assets/image-20200430184704193.png)
+
+3. Unix Architecture
+   ![image-20200430184928418](lec2.assets/image-20200430184928418.png)
+
+   - **User level, kernel level and hardware level**
+   - **Everything is a file**.  -> File System (based on device derivers)
+   - Use IPC to use many small problems to do one big task
+     - `PIPE` is a good example
+     - `PIPE` is also a file, so we can write data to `PIPE`
+   - User level program use `system call` to use kernel’s service
+   - **Unix architecture hasn’t changed much..**
+
+4. Core abstraction in kernel
+
+   - File: an abstraction of disk
+   - Virtual Memory: an abstraction of physical memory
+   - Process: an abstraction of CPU
+
+   ![image-20200430190400235](lec2.assets/image-20200430190400235.png)
+
+   ![image-20200430190410517](lec2.assets/image-20200430190410517.png)
+
+   Interface: system call
+   ![image-20200430190501840](lec2.assets/image-20200430190501840.png)
+
+5. Linux architecture
+   ![image-20200430190518894](lec2.assets/image-20200430190518894.png)
+
+   - VFS: **another abstraction above filesystem**
+   - Networking: another device (not block or character)
+     - Can also provide a interface to VFS
+     - `Socket` is like a file
+
 ## Exokernel
 
 Compare three different kinds of kernels
