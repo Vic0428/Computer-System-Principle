@@ -1,5 +1,37 @@
 # 2. OS Structure
 
+## Overview
+
+1. Recap
+
+   - **Why OS Architecture & Structure** ?
+
+     - For user/driver
+       - Should be convenient to use, easy to learn, reliable and fast, etc.
+     - For system architect / developer
+       - should be easy to design, implement, and maintain
+       - flexible, reliable, error-free, and efficient
+
+     ![image-20200430192936834](lec2.assets/image-20200430192936834.png)
+
+2. OS Structure
+
+   - Simple kernel
+     ![image-20200430192950138](lec2.assets/image-20200430192950138.png)
+
+   - Monolithic Kernel
+     ![image-20200430193010796](lec2.assets/image-20200430193010796.png)
+
+   - Micro Kernel
+     ![image-20200430193052580](lec2.assets/image-20200430193052580.png)
+
+   - Exokernel
+     ![image-20200430193122447](lec2.assets/image-20200430193122447.png)
+
+   - VMM
+
+     ![image-20200430193131638](lec2.assets/image-20200430193131638.png)
+
 ## Monolithic Kernel
 
 1. Take `Unix` as an example!
@@ -276,3 +308,5 @@ A software-abstraction layer that partitions the HW into one or more virtual mac
 2. [Flex-SC](https://www.usenix.org/conference/osdi10/flexsc-flexible-system-call-scheduling-exception-less-system-calls)
 3. [Xen](https://www.youtube.com/watch?v=2moUsgMOie4)
 5. [Prof. Geoffrey's notes](https://www.ops-class.org/slides/2017-04-26-xen/)
+6. [THU AOS](https://github.com/chyyuu/aos_course_info)
+
