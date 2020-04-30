@@ -32,6 +32,48 @@
 
      ![image-20200430193131638](lec2.assets/image-20200430193131638.png)
 
+## History
+
+### Multics
+
+1. `Multics`
+
+   ![image-20200430194133000](lec2.assets/image-20200430194133000.png)
+
+2. Multics on GE645
+   ![image-20200430194242528](lec2.assets/image-20200430194242528.png)
+
+3. Design Goals and Features
+   ![image-20200430194334042](lec2.assets/image-20200430194334042.png)
+
+4. Addressing
+   ![image-20200430194720286](lec2.assets/image-20200430194720286.png)
+
+   ![image-20200430194735571](lec2.assets/image-20200430194735571.png)
+
+### THE
+
+1. THE
+   ![image-20200430194925191](lec2.assets/image-20200430194925191.png)
+
+2. Contributions
+   ![image-20200430195118870](lec2.assets/image-20200430195118870.png)
+
+   ![image-20200430195153380](lec2.assets/image-20200430195153380.png)
+
+   Challenge
+
+   - Complex softwares v.s. puny hardware
+   - Challange: Multiprogramming
+
+   ![image-20200430195547444](lec2.assets/image-20200430195547444.png)
+
+    ![image-20200430195842815](lec2.assets/image-20200430195842815.png)
+
+   ![image-20200430195916108](lec2.assets/image-20200430195916108.png)
+
+   ![image-20200430195938044](lec2.assets/image-20200430195938044.png)
+
 ## Monolithic Kernel
 
 1. Take `Unix` as an example!
