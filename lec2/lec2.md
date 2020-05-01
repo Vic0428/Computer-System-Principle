@@ -51,7 +51,7 @@
 
    ![image-20200430194735571](lec2.assets/image-20200430194735571.png)
 
-### THE
+### THE 
 
 1. THE
    ![image-20200430194925191](lec2.assets/image-20200430194925191.png)
@@ -127,18 +127,18 @@ Compare three different kinds of kernels
 
 ### Traditional OS
 
-1. Only privileged servers and the kernel can manage system resources
+1. Only **privileged servers** and **the kernel** can manage system resources
 2. Both resource management & protection are done by kernel
-   - Centralized control
+   - **Centralized control**
 3. Untrusted applications are limited to the interface
-   - Limited functionality
-   - Hurt application performance
-   - Hide information (page fault etc.)
+   - **Limited functionality**
+   - **Hurt application performance**
+   - **Hide information (page fault etc.)**
 4. An interface designed to accommodate **every** application
-   - Flaw actually
-5. Solution
-   - Allow applications enough control over resources
-   - Separating application from management
+   - **Flaw actually**
+5. **Solution**
+   - Allow applications **enough control over resources**
+   - **Separating application from management**
 
 ### The idea behind exokernel
 
@@ -166,9 +166,9 @@ Compare three different kinds of kernels
 ### Exokernel: Design Challenge
 
 1. Kernel’s new role
-   - Tracking ownership of resources
-   - Ensuring resources protection
-   - Revoking resource access
+   - **Tracking** ownership of resources
+   - **Ensuring** resources protection
+   - **Revoking** resource access
 2. And smart guys introduce three techniques
    - Secure binding
    - Visible revocation
@@ -176,7 +176,7 @@ Compare three different kinds of kernels
 
 ### Exokernel: Principles
 
-1. Separate resource protocol and management
+1. Separate **resource protocol** and **management**
 2. Expose allocation
 3. Expose names
 4. Expose revocations
@@ -184,18 +184,18 @@ Compare three different kinds of kernels
 
 ### Exokernel: Benefits
 
-1. Expose kernel data structure
+1. **Expose kernel data structure**
    - Without lots of system calls
-2. Flexibility
+2. **Flexibility**
    - Libos can modified and debugged more easily
-3. Performance improvement
+3. **Performance improvement**
 
 ### Exokernel: Drawbacks
 
-1. The interface design is not simple
+1. The interface design is **not simple**
 2. The ease of creation and mixing libOSes could lead to code messes
 3. Customer support is harder than before
-   - What’s OS you are choosing?
+   - **What’s OS you are choosing?**
 
 ## Flexible System Call
 
