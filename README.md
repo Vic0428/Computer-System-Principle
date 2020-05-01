@@ -20,6 +20,9 @@ Lecture 14: [Data Privacy](lec14/lec14.md)
 
 Lecture 16: [Learned Index](lec16/lec16.md)
 
+Lecture 17:  [The Programming Language of OS](lec17/lec17.md)
+
 ## Reference
 
 1. [IPADS CSP](https://ipads.se.sjtu.edu.cn/courses/csp/)
+2. [THU AOS](https://github.com/chyyuu/aos_course_info/blob/master/readinglist.md#os-architecture)
