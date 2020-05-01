@@ -144,11 +144,16 @@ Compare three different kinds of kernels
 
 1. Separate resource management from protection
 
-2. **Kernel**: only protect resources
+2. Traditional OS Problem
+   ![image-20200501192300737](lec2.assets/image-20200501192300737.png)
 
-3. **Application**: only manage resources
+   - High level abstraction, lower performance, higher complexity
 
-4. Specialisation is common
+3. **Kernel**: only protect resources
+
+4. **Application**: only manage resources
+
+5. Specialisation is common
 
    - Application spécialization
      - Millions of apps
@@ -157,11 +162,32 @@ Compare three different kinds of kernels
    - Hardware specialization
      - CPU, GPU, ...
 
-5. OS as a library
+6. Application know better than OS, Application demands vary widely
+   ![image-20200501192418595](lec2.assets/image-20200501192418595.png)
+
+   
+
+7. OS as a library
 
    - Different libos can coexist on the same **exokernel**
 
    ![image-20200122104422476](lec2.assets/image-20200122104422476.png)
+
+8. Ideas
+
+   - Give un-trusted applications as much control over physical resources as possible
+
+   - To force **as few abstraction as possible** on developers
+
+   - **Separate protection from management**
+     ![image-20200501192620762](lec2.assets/image-20200501192620762.png)
+
+     ![image-20200501192646326](lec2.assets/image-20200501192646326.png)
+
+9. `Exokernel` architecture
+   ![image-20200501192733802](lec2.assets/image-20200501192733802.png)
+
+    
 
 ### Exokernel: Design Challenge
 
@@ -170,9 +196,26 @@ Compare three different kinds of kernels
    - **Ensuring** resources protection
    - **Revoking** resource access
 2. And smart guys introduce three techniques
-   - Secure binding
-   - Visible revocation
-   - Abort protocol
+   - **Secure binding**
+     - Applications can securely bind to machine resources and handle events
+     - It is a protection mechanism that **decouples authorization from actual use of a resource**
+     - Secure binding techniques
+       - **Hardware mechanism**
+       - **Software caching**
+       - **Downloading application code**
+   - **Visible revocation**
+     - A way to reclaim resources and break their (application &  resources) secure binding
+     - Application can participate in resource revocation protocol
+     - Traditional OS not know physical resources actually. And performed revocation invisibly
+       - When page swapped to disk?
+   - **Abort protocol**
+     - If a library OS fails to respond quickly, the secure bindings need to be broken **by force**
+     - `exokernel` can break secure bindings of uncooperative applications by force
+     - An `exokernel` simply breaks all secure bindings to the resource and informs the libOS
+3. In library OS
+   - IPC Abstractions
+   - Application-level Virtual Memory
+   - Remote Communication
 
 ### Exokernel: Principles
 
