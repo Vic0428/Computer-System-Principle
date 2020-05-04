@@ -192,3 +192,78 @@
    - Kluge word density
      ![image-20200503215753188](lec17.assets/image-20200503215753188.png)
 
+## A Study of Bugs on Linux
+
+### Introduction
+
+Why study faults/bugs/Vulnerabilities in OS code?
+
+- Find the relation between **language** and **OS**
+
+Some questions
+
+- **Where are the errors?**
+  - Driver code has error rates three to seven times higher for certain types of errors than code in **the rest of kernel**
+- **How are bugs distributed?**
+  - The error distribution is readily matched to a logarithmic series distribution
+- **How long do bugs live?**
+  - the average bug lifetime for certain types of bugs is about 1.8 years.
+
+### 19 years ago
+
+1. Linux Code Base Growth
+   ![image-20200504140337531](lec17.assets/image-20200504140337531.png)
+
+   The twelve bug checkers
+   ![image-20200504140357042](lec17.assets/image-20200504140357042.png)
+
+2. **Drivers are the one major source of bugs in operating systems**
+
+   ![image-20200504140455966](lec17.assets/image-20200504140455966.png)
+
+   - `Minix 3`: microkernel
+   - `Singularity`: use another language writing OS kernel
+     - Not good performance
+     - Bad backward compatibility
+
+3. Deadlock/data race related bugs
+   ![image-20200504140813265](lec17.assets/image-20200504140813265.png)
+
+   - `kmalloc` may sleep
+
+4. NULL/Free related bugs
+   ![image-20200504140918345](lec17.assets/image-20200504140918345.png)
+   - Garbage collection language may prevent these problems..
+5. Var related bug
+   ![image-20200504141123995](lec17.assets/image-20200504141123995.png)
+   - User-mode application stack will grow as demand increase
+   - Kernel stack has **fixed** size
+6. Range related bugs
+   ![image-20200504141222400](lec17.assets/image-20200504141222400.png)
+   - Java / C# will provide boundary check but not good performance. 
+
+### 9 years ago
+
+1. Line of Code in Linux
+
+   ![image-20200504141423262](lec17.assets/image-20200504141423262.png)
+
+2. Comparative fault count
+   ![image-20200504141451660](lec17.assets/image-20200504141451660.png)
+
+   - With code complexity increases, bugs still exist. 
+
+   Per finding and fixing difficulty, and impact likelihood
+   ![image-20200504141556017](lec17.assets/image-20200504141556017.png)
+
+3. Linux kernel vulnerability
+   ![image-20200504141618349](lec17.assets/image-20200504141618349.png)
+
+   ![image-20200504141731054](lec17.assets/image-20200504141731054.png)
+
+4. Hard to find bugs even with advanced tools
+   ![image-20200504141851843](lec17.assets/image-20200504141851843.png)
+
+   - Root cause is **C language** 
+   - Semantics bug in C -> **buffer overflow**, **uninitialized data**
+
