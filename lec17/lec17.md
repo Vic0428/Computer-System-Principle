@@ -233,6 +233,7 @@ Some questions
 
 4. NULL/Free related bugs
    ![image-20200504140918345](lec17.assets/image-20200504140918345.png)
+   
    - Garbage collection language may prevent these problems..
 5. Var related bug
    ![image-20200504141123995](lec17.assets/image-20200504141123995.png)
@@ -240,6 +241,7 @@ Some questions
    - Kernel stack has **fixed** size
 6. Range related bugs
    ![image-20200504141222400](lec17.assets/image-20200504141222400.png)
+   
    - Java / C# will provide boundary check but not good performance. 
 
 ### 9 years ago
@@ -267,3 +269,87 @@ Some questions
    - Root cause is **C language** 
    - Semantics bug in C -> **buffer overflow**, **uninitialized data**
 
+
+
+## The benefits and costs of writing kernel in a high-level language
+
+1. Should we use high-level languages to build OS kernels?
+
+   - Pros
+
+     - Easier to program
+     - Simpler concurrency with GC
+     - Prevents classes of kernel bugs
+
+   - Downside
+
+     - Bounds, cast, nil-pointer checks
+     - Reflection
+     - Garbage collection
+
+     ![image-20200507214301358](lec17.assets/image-20200507214301358.png)
+
+2. Goal: measure HLL impact
+
+   - Pros
+     - Reduction of bugs
+     - Simpler code
+   - Cons
+     - HLL safety tax
+     - GC CPU and memory overhead
+     - GC pause times
+
+3. Methodology
+
+   - None measure HLL impact in a monolithic POSIX kernel
+   - Build new HLL kernel, compare with Linux
+   - Isolate HLL impact
+     - Same apps, POSIX interface, and monolithic organization
+
+   ![image-20200507214432008](lec17.assets/image-20200507214432008.png)
+
+4. Why Go-lang?
+
+   - Easy to call asm
+   - Compiled to machine code with good compiler
+   - Easy concurrency & static analysis
+   - GC
+     - Concurrent mark and sweep
+     - Stop-the-world of 10s of us
+
+5. Biscuit
+   ![image-20200507214647338](lec17.assets/image-20200507214647338.png)
+
+   ![image-20200507214711643](lec17.assets/image-20200507214711643.png)
+
+   - Can’t allocate heap memory ==> nothing works
+
+   - All kernel face this problem
+     ![image-20200507214847813](lec17.assets/image-20200507214847813.png)
+
+     ![image-20200507214911634](lec17.assets/image-20200507214911634.png)
+
+     - Sleep with lock => deadlock
+
+     ![image-20200507215056641](lec17.assets/image-20200507215056641.png)
+
+     - Use static analysis to reserve **memory size**
+     - Combination of static analysis and **dynamic runtime**
+
+     ![image-20200507215147406](lec17.assets/image-20200507215147406.png)
+
+     - RCU is good for parallel
+     - More on optimizations (algorithm and hardware), not use feature of HLL
+     - HLL is only for reducing bugs.
+
+     ![image-20200507215530516](lec17.assets/image-20200507215530516.png)
+
+6. Evaluate 
+   ![image-20200507215602470](lec17.assets/image-20200507215602470.png)
+
+   ![image-20200507215656314](lec17.assets/image-20200507215656314.png)
+
+7. Conclusion
+   ![image-20200507215811633](lec17.assets/image-20200507215811633.png)
+
+   
