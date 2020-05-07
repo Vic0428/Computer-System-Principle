@@ -277,44 +277,44 @@ Some questions
 
    - Pros
 
-     - Easier to program
-     - Simpler concurrency with GC
-     - Prevents classes of kernel bugs
+     - **Easier to program**
+     - **Simpler concurrency with GC**
+     - Prevents **classes of kernel bugs**
 
    - Downside
 
      - Bounds, cast, nil-pointer checks
-     - Reflection
-     - Garbage collection
+     - **Reflection**
+     - **Garbage collection**
 
      ![image-20200507214301358](lec17.assets/image-20200507214301358.png)
 
 2. Goal: measure HLL impact
 
    - Pros
-     - Reduction of bugs
-     - Simpler code
+     - **Reduction of bugs**
+     - **Simpler** code
    - Cons
-     - HLL safety tax
-     - GC CPU and memory overhead
-     - GC pause times
+     - **HLL safety tax**
+     - **GC CPU and memory overhead**
+     - **GC pause times**
 
-3. Methodology
+3. **Methodology**
 
    - None measure HLL impact in a monolithic POSIX kernel
    - Build new HLL kernel, compare with Linux
    - Isolate HLL impact
-     - Same apps, POSIX interface, and monolithic organization
+     - **Same apps, POSIX interface, and monolithic organization**
 
    ![image-20200507214432008](lec17.assets/image-20200507214432008.png)
 
 4. Why Go-lang?
 
-   - Easy to call asm
-   - Compiled to machine code with good compiler
-   - Easy concurrency & static analysis
-   - GC
-     - Concurrent mark and sweep
+   - **Easy to call asm**
+   - **Compiled to machine code with good compiler**
+   - **Easy concurrency & static analysis**
+   - **GC**
+     - **Concurrent mark and sweep**
      - Stop-the-world of 10s of us
 
 5. Biscuit
@@ -338,9 +338,9 @@ Some questions
 
      ![image-20200507215147406](lec17.assets/image-20200507215147406.png)
 
-     - RCU is good for parallel
-     - More on optimizations (algorithm and hardware), not use feature of HLL
-     - HLL is only for reducing bugs.
+     - **RCU** is good for parallel
+     - More on **optimizations** (algorithm and hardware), not use feature of HLL
+     - **HLL** is only for reducing bugs.
 
      ![image-20200507215530516](lec17.assets/image-20200507215530516.png)
 
