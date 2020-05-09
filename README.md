@@ -22,6 +22,10 @@ Lecture 16: [Learned Index](lec16/lec16.md)
 
 Lecture 17:  [The Programming Language of OS](lec17/lec17.md)
 
+## Case study
+
+Case 1: [seL4](sel4/sel4.md)
+
 ## Reference
 
 1. [IPADS CSP](https://ipads.se.sjtu.edu.cn/courses/csp/)
