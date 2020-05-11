@@ -301,7 +301,7 @@ Some questions
 
 3. **Methodology**
 
-   - None measure HLL impact in a monolithic POSIX kernel
+   - **None measure HLL impact in a monolithic POSIX kernel**
    - Build new HLL kernel, compare with Linux
    - Isolate HLL impact
      - **Same apps, POSIX interface, and monolithic organization**

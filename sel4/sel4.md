@@ -48,6 +48,46 @@ The seL4 microkernel is the world’s most high-assured operating system kernel.
    seL4_TCB_Suspend(seL4_CapInitThreadTCB);
    ```
 
+### Untyped
+
+An introduction to physical memory management on seL4. [Link](https://docs.sel4.systems/Tutorials/untyped.html)
+
+1. Physical memory
+   - Apart from a small, static amount of kernel memory, **all physical memory is managed by user-level in an seL4 system**.
+   - Capabilities to objects created by seL4 at boot, as well as the rest of the physical resources managed by seL4, **are passed to the root task on start up**.
+2. Untyped
+   - Excluding the objects used to create the root task, **capabilities to all available physical memory are passed to the root task as capabilities to *untyped* memory**
+   - Untyped memory is **a block of contiguous physical memory with a specific size**.
+   - Untyped objects **have a boolean property *device* which indicates whether the memory is writable by the kernel or not**
+3. Retyping
+   - Untyped capabilities have a single invocation: [seL4_Untyped_Retype](https://docs.sel4.systems/ApiDoc.html#retype) which is used to **create a new capability from an untyped**. 
+   - Specifically, the new capability created by a retype invocation provides access to the a subset of the memory range granted by the original untyped, with a specific type. **New capabilities created by retyping an untyped object are referred to as *children* of that untyped object**.
+
+#### Code
+
+1. Create an untyped object
+
+   ```c++
+       /* Create a TCB in CSlot child_tcb */
+       error = seL4_Untyped_Retype(child_untyped,
+                                   seL4_TCBObject,
+                                   seL4_TCBBits,
+                                   seL4_CapInitThreadCNode,
+                                   0,
+                                   0,
+                                   child_tcb,
+                                   1);
+   ```
+
+2. Delete the object
+
+   ```c++
+   // Revoke the child untyped
+   seL4_CNode_Revoke(seL4_CapInitThreadCNode, child_untyped, seL4_WordBits);
+   ```
+
+   
+
 ## Reference
 
 1. [seL4 website](https://sel4.systems/)
