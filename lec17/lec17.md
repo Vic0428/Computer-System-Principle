@@ -352,4 +352,123 @@ Some questions
 7. Conclusion
    ![image-20200507215811633](lec17.assets/image-20200507215811633.png)
 
+## Writing kernel in Rust?
+
+### Introduction: Rust
+
+1. What is rust?
+   ![image-20200511105626049](lec17.assets/image-20200511105626049.png)
+   - Performance: Similar to C
+   - Safety: Similar to Haskell
+   - **High learning cost !!!!**
+
+2. Compared with Go
+   ![image-20200511105831195](lec17.assets/image-20200511105831195.png)
+
+   		- Mozilla more like to open source community
+   		- Rust also is similar to `ML`
+     - Features: not traditional `OO` (not based on inheritance) 
+       Rust => Functional programming perpective
+       Go => garbage collection
+       Rust => protect memory safety in compiling time
+
+3. Go and Rust similarities
+   ![image-20200511110208213](lec17.assets/image-20200511110208213.png)
+
+   - Integrated testing and doc => good SE perspective
+
+4. Rust > Go
+   ![image-20200511110254689](lec17.assets/image-20200511110254689.png)
+
+   - The designer of Rust has **functional programming background**. Rust has no run time cost. (C++ also brought some higher abstractions but with huge runtime cost)
+   - FFI => (Easily combined with C)
+   - Errors => values (prevent null pointers)
+   - Compile more time, runtime is quick!
+   - **Good package manager**
+   - Rust => learning is hard, but finding bugs is easier!
+
+5. Go > Rust
+   ![image-20200511110528225](lec17.assets/image-20200511110528225.png)
+
+   - Quick compile time
+   - Learning quick! (Similar to C)
+
+6. OS in Rust
+   ![image-20200511110654867](lec17.assets/image-20200511110654867.png)
+
+   - Current no study like MIT compared with `rust os` and `Linux` 
+     - Recall MIT `Biscuit`
+   - Ownership => solve memory safety problem and concurrency bug. 
+   - `trait` => composable OOP 
+
+7. Why rust? => Rust central feature is ownership
+
+   - The stack and the heap
+     ![image-20200511111413555](lec17.assets/image-20200511111413555.png)
+
+     - Compiler help you to push parameter to stack and pop stack. (Because in compile time, the compiler know the size of arguments)
+     - Heap => size will be dynamic. 
+     - Fix size variable => better for stack. Dynamic size variable (may be freed) => better for heap. 
+
+   - Ownership
+
+     ![image-20200511111724022](lec17.assets/image-20200511111724022.png)
+
+     Example of `hello world`
+
+     ![image-20200511111914209](lec17.assets/image-20200511111914209.png)
+
+     Copy VS Move
+
+     ![image-20200511112007208](lec17.assets/image-20200511112007208.png)
+
+     - Copy `trait` when using `&str`
+       ![image-20200511112535894](lec17.assets/image-20200511112535894.png)
+     - Move `trait` when using heap
+       ![image-20200511112556344](lec17.assets/image-20200511112556344.png)
+
+   - No double free error!
+     ![image-20200511113053842](lec17.assets/image-20200511113053842.png)
+
+     ![image-20200511113256405](lec17.assets/image-20200511113256405.png)
+
+     ![image-20200511113339246](lec17.assets/image-20200511113339246.png)
+
+   - `Clone()` and Giving ownership
+     ![image-20200511113548948](lec17.assets/image-20200511113548948.png)
+
+   - Passing a reference / borrowing
+     ![image-20200511113857526](lec17.assets/image-20200511113857526.png)
+
+     ![image-20200511114101778](lec17.assets/image-20200511114101778.png)
+
+### OS in Rust
+
+1. Rust & OS in the 2010s
+   ![image-20200511135541525](lec17.assets/image-20200511135541525.png)
+
+   The relative performance of c and rust
+   ![image-20200511135802513](lec17.assets/image-20200511135802513.png)
+
+   ![image-20200511140000003](lec17.assets/image-20200511140000003.png)
+
+   Runtime is very important!
+   ![image-20200511140224011](lec17.assets/image-20200511140224011.png)
+
+   - Rust is only an candidate programming language
+
+   Challenges of OS in Rust
+   ![image-20200511140342158](lec17.assets/image-20200511140342158.png)
+
+   - Microsoft want to further optimize rust ownership. 
+
+   Some hybrid approach
+   ![image-20200511140446958](lec17.assets/image-20200511140446958.png)
+
+   ![image-20200511140512294](lec17.assets/image-20200511140512294.png)
+
+   - Amazon used rust to write container. And dropbox used rust to write storage engine. 
+
+   ![image-20200511140534762](lec17.assets/image-20200511140534762.png)
+
    
