@@ -8,6 +8,8 @@ The seL4 microkernel is the world’s most high-assured operating system kernel.
 
 ### Capabilities
 
+#### Concept
+
 [tutorial link](https://docs.sel4.systems/Tutorials/capabilities.html)
 
 1. What is a capability?
@@ -50,6 +52,8 @@ The seL4 microkernel is the world’s most high-assured operating system kernel.
 
 ### Untyped
 
+#### Concept
+
 An introduction to physical memory management on seL4. [Link](https://docs.sel4.systems/Tutorials/untyped.html)
 
 1. Physical memory
@@ -86,7 +90,65 @@ An introduction to physical memory management on seL4. [Link](https://docs.sel4.
    seL4_CNode_Revoke(seL4_CapInitThreadCNode, child_untyped, seL4_WordBits);
    ```
 
-   
+### Mapping
+
+[Tutorial](https://docs.sel4.systems/Tutorials/mapping.html)
+
+#### Concept
+
+1. Virtual memory
+
+   - **seL4 does not provide virtual memory management**, beyond kernel primitives for manipulating hardware paging structures. 
+   - **User-level must provide services for creating intermediate paging structures, mapping and unmapping pages.**
+
+2. Paging structure
+
+   -  As part to the **booting process**, seL4 initializes **the root task** with a top-level hardware virtual memory object, which is referred to **VSpace**. 
+
+   - A capability to this structure is made available in the `seL4_CapInitThreadVSpace` slot in the root tasks CSpace. 
+
+   - In addition to the top-level paging structure, **intermediate hardware virtual memory objects are required to map pages**.
+
+     ```c++
+     // For x86_64
+     seL4_PDPT seL4_PageDirectory seL4_PageTable
+     ```
+
+   - An example of mapping
+
+     ```c++
+     /* map a PDPT at TEST_VADDR */
+     error = seL4_X86_PDPT_Map(pdpt, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+     ```
+
+   - **Once all of the intermediate paging structures have been mapped for a specific virtual address range, physical frames can be mapped into that range by invoking the frame capability.** The code snippet below shows an example of mapping a frame at address `TEST_VADDR`.
+
+     ```c++
+     /* map a read-only page at TEST_VADDR */
+     error = seL4_X86_Page_Map(frame, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_CanRead, seL4_X86_Default_VMAttributes);
+     ```
+
+#### Code
+
+1. Three level mapping
+
+   ```c++
+   /* map a PDPT at TEST_VADDR */
+   error = seL4_X86_PDPT_Map(pdpt, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+   // Map a page directory object
+   error = seL4_X86_PageDirectory_Map(pd, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+   // Map a page table object
+   error = seL4_X86_PageTable_Map(pt, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+   ```
+
+2. After mapping intermediate paging structure, we can mapped page with specific right
+
+   ```c++
+   error = seL4_X86_Page_Map(frame, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_ReadWrite, seL4_X86_Default_VMAttributes);
+   // Write to this address
+   seL4_Word *x = (seL4_Word *) TEST_VADDR;
+   *x = 5;
+   ```
 
 ## Reference
 
