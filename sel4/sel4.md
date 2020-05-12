@@ -150,6 +150,76 @@ An introduction to physical memory management on seL4. [Link](https://docs.sel4.
    *x = 5;
    ```
 
+### Threads
+
+[Tutorial](https://docs.sel4.systems/Tutorials/threads.html)
+
+#### Concept
+
+1. Thread control block
+
+   - It represents **an execution context** and **manage processor time**. 
+   - TCBs contains following information
+     - a priority and maximum control priority
+     - register state and floating-point context
+     - `CSpace` capability,
+     - `VSpace` capability,
+     - endpoint capability to send fault messages to
+     - and the reply capability slot
+
+2. Scheduling model
+
+   - The seL4 scheduler **chooses the next thread to run on a specific processing core**, and is a **priority-based round-robin scheduler**.
+
+     - Priorities: The scheduler picked **the highest priority**, runnable thread
+
+     - Round robin: **FIFO** round robin fashion
+
+     - Domain scheduling: seL4 provides **a top-level hierarchical scheduler** which provides static, cyclical scheduling of **scheduling partitions known as domains**
+
+       **Threads can be assigned to domains, and threads are only scheduled when their domain is active**. Cross-domain IPC is delayed until a domain switch, and seL4_Yield between domains is not possible. **When there are no threads to run while a domain is scheduled, a domain-specific idle thread will run until a switch occurs**.
+
+       ```c++
+       /* Set thread's domain */
+       seL4_Error seL4_DomainSet_Set(seL4_DomainSet _service, seL4_Uint8 domain, seL4_TCB thread);
+       ```
+
+3. CapDL: Capability Distribution Language [link](https://docs.sel4.systems/projects/capdl/)
+
+#### Code
+
+1. Create a new thread
+
+   ```c++
+   seL4_Error result = seL4_Untyped_Retype(tcb_untyped, seL4_TCBObject, seL4_TCBBits, root_cnode, 0, 0, tcb_cap_slot, 1);
+   ```
+
+   Configure a TCB
+
+   ```c++
+   result = seL4_TCB_Configure(tcb_cap_slot, 0, root_cnode, 0, root_vspace, 0, (seL4_Word) thread_ipc_buff_sym, tcb_ipc_frame);
+   ```
+
+2. Set priority
+
+   ```c++
+   result = seL4_TCB_SetPriority(tcb_cap_slot, root_tcb, 254);
+   ```
+
+   Set initial register
+
+   ```c++
+   sel4utils_arch_init_local_context((void*)new_thread,
+                                     (void *)print, (void *)&val, (void *)3,
+                                     (void *)tcb_stack_top, &regs);
+   ```
+
+3. Resume the new thread
+
+   ```c++
+   error = seL4_TCB_Resume(tcb_cap_slot);
+   ```
+
 ## Reference
 
 1. [seL4 website](https://sel4.systems/)
