@@ -357,7 +357,164 @@ int main(int c, char *argv[]) {
 }
 ```
 
+### Notifications
 
+#### Concept
+
+1. Why notification?
+   - Notifications allow processes to **send asynchronous signals to each other**, and **are primarily used for interrupt handling and to synchronise access to shared data buffers**.
+   - Notification object
+     - Signals are **sent** and **received** with **invocations on capabilities to notification objects**
+     - A notification object consists of a data word, which acts as an array of binary semaphores, and a queue of TCBs waiting to for notifications.
+   - Notification object can be in three states
+     - Waiting - there are TCBs queued on this notification waiting for to be signalled.
+     - Active - TCBs have signalled data on this notification,
+     - Idle - no TCBs are queued and no TCBs have signalled this object since it was last set to idle.
+2. Two important API
+   - `seL4_Signal`
+   - `seL4_Wait`
+3. **Notification objects can be used to receive signals of interrupt delivery, and can also be bound to TCBs such that signals and IPC can be received by the same thread.** 
+
+#### Code
+
+1. A classic **consumer-producer** problem
+
+   One **consumer** and two **producers**
+
+   `consumer.c`
+
+   ```c++
+   
+   
+   #include <assert.h>
+   #include <sel4/sel4.h>
+   #include <stdio.h>
+   #include <utils/util.h>
+   #include <sel4utils/util.h>
+   
+   // notification object
+   extern seL4_CPtr buf1_empty;
+   extern seL4_CPtr buf2_empty;
+   extern seL4_CPtr full;
+   extern seL4_CPtr endpoint;
+   
+   extern seL4_CPtr buf1_frame_cap;
+   extern const char buf1_frame[4096];
+   extern seL4_CPtr buf2_frame_cap;
+   extern const char buf2_frame[4096];
+   
+   // cslot containing a capability to the cnode of the server
+   extern seL4_CPtr consumer_vspace;
+   extern seL4_CPtr producer_1_vspace;
+   extern seL4_CPtr producer_2_vspace;
+   
+   extern seL4_CPtr cnode;
+   extern seL4_CPtr mapping_1;
+   extern seL4_CPtr mapping_2;
+   
+   #define BUF_VADDR 0x5FF000
+   
+   int main(int c, char *argv[]) {
+       seL4_Error error = seL4_NoError;
+       seL4_Word badge;
+   
+       
+       /* set up shared memory for consumer 1 */
+       /* first duplicate the cap */
+       error = seL4_CNode_Copy(cnode, mapping_1, seL4_WordBits, 
+                             cnode, buf1_frame_cap, seL4_WordBits, seL4_AllRights);
+       ZF_LOGF_IFERR(error, "Failed to copy cap");
+       /* now do the mapping */
+       error = seL4_ARCH_Page_Map(mapping_1, producer_1_vspace, BUF_VADDR, 
+                                  seL4_AllRights, seL4_ARCH_Default_VMAttributes);
+       ZF_LOGF_IFERR(error, "Failed to map frame");
+       
+       // share buf2_frame_cap with producer_2
+       /* First duplicate the cap */
+       error = seL4_CNode_Copy(cnode, mapping_2, seL4_WordBits,
+                               cnode, buf2_frame_cap, seL4_WordBits, seL4_AllRights);
+       /* now do the mapping */
+       error = seL4_ARCH_Page_Map(mapping_2, producer_2_vspace, BUF_VADDR,
+                                   seL4_AllRights, seL4_ARCH_Default_VMAttributes);
+   
+       /* send IPCs with the buffer address to both producers */
+       seL4_SetMR(0, BUF_VADDR);
+       seL4_Send(endpoint, seL4_MessageInfo_new(0, 0, 0, 1));
+       seL4_SetMR(0, BUF_VADDR);
+       seL4_Send(endpoint, seL4_MessageInfo_new(0, 0, 0, 1));
+       
+       /* start single buffer producer consumer */
+       volatile long *buf1 = (long *) buf1_frame;
+       volatile long *buf2 = (long *) buf2_frame;
+   
+       *buf1 = 0;
+       *buf2 = 0;
+   
+       
+       // Signal both producers
+       seL4_Signal(buf1_empty);
+       seL4_Signal(buf2_empty);
+   
+       printf("Waiting for producer\n");
+       for (int i = 0; i < 10; i++) {
+           seL4_Wait(full, &badge);
+           printf("Got badge: %lx\n", badge);
+           if (badge & 0b01) {
+               assert(*buf1 == 1);
+               *buf1 = 0;
+               seL4_Signal(buf1_empty);
+           }
+           if (badge & 0b10) {
+               assert(*buf2 == 2);
+               *buf2 = 0;
+               seL4_Signal(buf2_empty);
+           }
+      }
+   
+       printf("Success!\n");
+       return 0;
+   }
+   ```
+
+   `producer1.c`
+
+   ```c++
+   
+   
+   #include <assert.h>
+   #include <stdio.h>
+   #include <sel4/sel4.h>
+   #include <utils/util.h>
+   #include <sel4utils/util.h>
+   
+   // caps to notification objects
+   extern seL4_CPtr empty;
+   extern seL4_CPtr full;
+   extern seL4_CPtr endpoint;
+   
+   int main(int c, char *argv[]) {
+       int id = 2;
+       
+       seL4_Recv(endpoint, NULL);
+       volatile long *buf = (volatile long *) seL4_GetMR(0);
+       
+       for (int i = 0; i < 100; i++) {
+           seL4_Wait(empty, NULL);
+           printf("%d: produce\n", id);
+           *buf = id;
+           seL4_Signal(full);
+       }
+       return 0;
+   }
+   ```
+
+2. From the above code, we found that there are three important **notification objects**
+
+   - `buf1_empty`
+   - `buf2_empty`
+   - `full`
+
+   
 
 ## Reference
 
