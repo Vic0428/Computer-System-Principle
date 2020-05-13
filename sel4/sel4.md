@@ -220,6 +220,145 @@ An introduction to physical memory management on seL4. [Link](https://docs.sel4.
    error = seL4_TCB_Resume(tcb_cap_slot);
    ```
 
+### IPC
+
+[tutorial](https://docs.sel4.systems/Tutorials/ipc.html)
+
+#### Concept
+
+1. IPC
+   - Interprocess communication (IPC) is **the microkernel mechanism for synchronous transmission of small amounts of data and capabilities** between processes.
+   - In seL4, IPC is facilitated by small kernel objects known as ***endpoints***, which act as general communication ports. **Invocations on endpoint objects are used to send and receive IPC messages**.
+   - **Endpoints consist of a queue of threads waiting to send, or waiting to receive messages**. To understand this, consider an example where *n* threads are waiting for a message on an endpoint. **If *n* threads send messages on the endpoint, all *n* waiting threads will receive the message and wake up**. If an *n+1*th sender sends a message, that sender is now queued.
+2. Relevant system calls
+   - `seL4_Send`: blocking sending message
+   - `seL4_NBSend`: polling send
+   - Similar for `seL4_Recv ` and `seL4_NBRecv` 
+3. IPC buffer
+   - Each thread has a buffer (referred to as the *IPC buffer*), which contains the payload of the IPC message, consisting of data and capabilities
+4. Capability transfer
+   - Along with data, IPC can be used to **send capabilities between processes per message**. 
+
+#### Code
+
+An `echo` server
+
+```c++
+
+
+#include <assert.h>
+#include <sel4/sel4.h>
+#include <stdio.h>
+#include <utils/util.h>
+
+// cslot containing IPC endpoint capability
+extern seL4_CPtr endpoint;
+// cslot containing a capability to the cnode of the server
+extern seL4_CPtr cnode;
+// empty cslot
+extern seL4_CPtr free_slot;
+
+int main(int c, char *argv[]) {
+
+	seL4_Word sender;
+    seL4_MessageInfo_t info = seL4_Recv(endpoint, &sender);
+    while (1) {
+	    seL4_Error error;
+        if (sender == 0) {
+
+             /* No badge! give this sender a badged copy of the endpoint */
+             seL4_Word badge = seL4_GetMR(0);
+             seL4_Error error = seL4_CNode_Mint(cnode, free_slot, seL4_WordBits,
+                                                cnode, endpoint, seL4_WordBits,
+                                                seL4_AllRights, badge);
+             printf("Badged %lu\n", badge);
+
+             // Use cap transfer to send the badged cap in the reply
+             info = seL4_MessageInfo_new(0, 0, 1, 0);
+             seL4_SetCap(0, free_slot);
+             /* reply to the sender and wait for the next message */
+             seL4_Reply(info);
+
+             /* now delete the transferred cap */
+             error = seL4_CNode_Delete(cnode, free_slot, seL4_WordBits);
+             assert(error == seL4_NoError);
+
+             /* wait for the next message */
+             info = seL4_Recv(endpoint, &sender);
+        } else {
+
+             // Use printf to print out the message sent by the client
+             // followed by a new line
+             seL4_Word length = seL4_MessageInfo_get_length(info);
+             for (int i = 0; i < length; ++i) {
+                  seL4_Word data = seL4_GetMR(i);
+                  printf("%c", (char)data);
+             }
+             printf("\n");
+             // Reply to the client and wait for the next message
+             error = seL4_CNode_SaveCaller(cnode, free_slot, seL4_WordBits);
+
+
+             info = seL4_Recv(endpoint, &sender);
+             length = seL4_MessageInfo_get_length(info);
+             for (int i = 0; i < length; ++i) {
+                  seL4_Word data = seL4_GetMR(i);
+                  printf("%c", (char)data);
+             } 
+             printf("\n");
+          
+             seL4_Send(free_slot, seL4_MessageInfo_new(0, 0, 0, 0));
+             info = seL4_ReplyRecv(endpoint, info, &sender);
+        }
+    }
+
+    return 0;
+}
+```
+
+A simple client
+
+```c++
+
+
+#include <assert.h>
+#include <stdio.h>
+#include <sel4/sel4.h>
+#include <utils/util.h>
+
+extern seL4_CPtr endpoint;
+extern seL4_CPtr cnode;
+extern seL4_CPtr badged_endpoint;
+
+const char *messages[] = {"quick", "fox", "over", "lazy"};
+
+int main(int c, char *argv[]) {
+
+    int id = 1;
+    
+    printf("Client %d: waiting for badged endpoint\n", id);
+    seL4_SetCapReceivePath(cnode, badged_endpoint, seL4_WordBits);
+    seL4_SetMR(0, id);
+    seL4_MessageInfo_t info = seL4_MessageInfo_new(0, 1, 0, 1);
+    info = seL4_Call(endpoint, info);
+    assert(seL4_MessageInfo_get_extraCaps(info) == 1);
+    /* wait for the server to send us an endpoint */
+    printf("Client %d: received badged endpoint\n", id);
+
+    for (int i = 0; i < ARRAY_SIZE(messages); i++) {
+        int j;
+        for (j = 0; messages[i][j] != '\0'; j++) {
+            seL4_SetMR(j, messages[i][j]);
+        }
+        info = seL4_MessageInfo_new(0, 0, 0, j);
+        seL4_Call(badged_endpoint, info);
+    }
+    return 0;
+}
+```
+
+
+
 ## Reference
 
 1. [seL4 website](https://sel4.systems/)
