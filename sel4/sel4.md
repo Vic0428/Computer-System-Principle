@@ -514,6 +514,68 @@ int main(int c, char *argv[]) {
    - `buf2_empty`
    - `full`
 
+### Interrupt
+
+#### Concept
+
+1. IRQControl 
+
+   - The root task is given a single capability from which **capabilities to all irq numbers in the system can be derived**, `seL4_CapIRQControl`. 
+
+2. IRQHandlers
+
+   - IRQHandler capabilities **give access to a single irq and are standard seL4 capabilities**: they *can* be moved and duplicated according to system policy.
+
+     ```c
+     // Get a capability for irq number 7 and place it in cslot 10 in a single-level cspace.
+     error = seL4_IRQControl_Get(seL4_IRQControl, 7, cspace_root, 10, seL4_WordBits);
+     ```
+
+3. Receiving interrupts
+
+   - Interrupts are received by **registering a capability to a notification object with the IRQHandler capability** for that `irq`, as follows. 
+
+     ```c++
+     seL4_IRQHandler_setNotification(irq_handler, notification);
+     ```
+
+     On success, **this call will result in signals being delivered to the notification object when an interrupt occurs**.
+
+#### Code
+
+1. Bound `interrupt_handle` capability with `notification` object
+
+   ```c++
+   /* Invoke irq_control to put the interrupt for TTC0_TIMER1_IRQ in
+          cslot irq_handler (depth is seL4_WordBits) */
+   error = seL4_IRQControl_Get(irq_control, TTC0_TIMER1_IRQ, cnode, irq_handler, seL4_WordBits);
+   /* Set ntfn as the notification for irq_handler */
+   error = seL4_IRQHandler_SetNotification(irq_handler, ntfn);
+   ```
+
+2. Handler interrupt and `ack` it
+
+   ```c++
+   int count = 0;
+   while (1) {
+     	/* Handle the timer interrupt */
+     	seL4_Word badge;
+     	seL4_Wait(ntfn, &badge);
+     	timer_handle_irq(&timer_drv);
+     	if (count == 0) {
+       	printf("Tick\n");
+     	}
+   
+     	/* Ack the interrupt */
+     	seL4_IRQHandler_Ack(irq_handler);
+     	count++;
+     	if (count == 1000 * msg) {
+       	break;
+     	}
+   }
+   
+   ```
+
    
 
 ## Reference
