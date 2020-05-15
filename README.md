@@ -22,6 +22,8 @@ Lecture 16: [Learned Index](lec16/lec16.md)
 
 Lecture 17:  [The Programming Language of OS](lec17/lec17.md)
 
+Lecture 18: [The interface of OS](lec18/lec18.md)
+
 ## Case study
 
 Case 1: [seL4](sel4/sel4.md)
