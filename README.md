@@ -28,6 +28,8 @@ Lecture 18: [The interface of OS](lec18/lec18.md)
 
 Case 1: [seL4](sel4/sel4.md)
 
+Case 2: [fuchsia](fuchsia/fuchsia.md)
+
 ## Reference
 
 1. [IPADS CSP](https://ipads.se.sjtu.edu.cn/courses/csp/)
