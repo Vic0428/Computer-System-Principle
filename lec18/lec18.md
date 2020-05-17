@@ -119,3 +119,52 @@
 
    - Signal handling system calls have the highest number of semantic (9.33) and compatibility-related (1.70) bug fixes per system call
    - Driver bug is not considered. 
+
+## POSIX in modern OS
+
+1. Introduction
+   ![image-20200517092625188](lec18.assets/image-20200517092625188.png)
+
+   - Modern OS: Android, IOS ...
+   - Modern workloads: WeChat, Twitter ..
+   - Some unpopular POSIX abstractions and what we need to have ?
+
+2. Workloads & Methodology
+   ![image-20200517092813284](lec18.assets/image-20200517092813284.png)
+
+   - Ubuntu is not so modern ...
+
+3. Question 1
+   ![image-20200517092920352](lec18.assets/image-20200517092920352.png)
+
+   - **Large numbers of unused or unimplemented abstractions**, Departure from traditional IPC and
+
+     async I/O
+
+   - IPC is not widely used..
+
+4. Question 2
+   ![image-20200517093048625](lec18.assets/image-20200517093048625.png)
+
+   - IOCTL: Extension API used to shortcut POSIX; Directly interact with the kernel; Build
+
+     functionality not expressed from POSIX APIs
+
+     - Read special file ..
+     - GPU is controller by IOCTL
+
+   - THREAD => more effective and high performance
+
+5. Question 3
+   ![image-20200517093255576](lec18.assets/image-20200517093255576.png)
+
+   - POSIX not provided GUI abstraction
+   - GPU is not block device, or character device … => so we need too use IOCTL
+   - Binder IPC is more high performant. 
+     - Not only transferring data
+     - But also interact with other processes
+
+6. Evolution of systems and applications
+   ![image-20200517093635441](lec18.assets/image-20200517093635441.png)
+
+   
