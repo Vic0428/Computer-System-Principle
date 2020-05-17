@@ -168,3 +168,37 @@
    ![image-20200517093635441](lec18.assets/image-20200517093635441.png)
 
    
+
+## How to design a Linux kernel interface?
+
+1. The Linux Programming Interface
+   ![image-20200517132639236](lec18.assets/image-20200517132639236.png)
+
+2. Moral 1: diverse user usages
+   ![image-20200517132740714](lec18.assets/image-20200517132740714.png)
+
+   - The max size of queue is 1024 => to small for nowadays usage
+   - **Semantics has changed**...
+
+3. Moral 2: unit tests
+   ![image-20200517132942061](lec18.assets/image-20200517132942061.png)
+
+4. Moral 3: Specification
+   ![image-20200517133154547](lec18.assets/image-20200517133154547.png)
+
+   - Now description is based on human language => also Leeds some bugs
+
+5. Moral 4: feedback loop
+   ![image-20200517133357023](lec18.assets/image-20200517133357023.png)
+
+6.  Moral 5: Into real world
+   ![image-20200517133430181](lec18.assets/image-20200517133430181.png)
+
+   - In real word usage, we can find the bug
+
+7. Moral 6: technical checklist
+   ![image-20200517133555116](lec18.assets/image-20200517133555116.png)
+
+   - Extensibility is **important**
+
+   
