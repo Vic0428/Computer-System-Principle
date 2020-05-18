@@ -173,32 +173,131 @@
 
 1. The Linux Programming Interface
    ![image-20200517132639236](lec18.assets/image-20200517132639236.png)
-
 2. Moral 1: diverse user usages
    ![image-20200517132740714](lec18.assets/image-20200517132740714.png)
-
    - The max size of queue is 1024 => to small for nowadays usage
    - **Semantics has changed**...
-
 3. Moral 2: unit tests
    ![image-20200517132942061](lec18.assets/image-20200517132942061.png)
-
 4. Moral 3: Specification
    ![image-20200517133154547](lec18.assets/image-20200517133154547.png)
-
    - Now description is based on human language => also Leeds some bugs
-
 5. Moral 4: feedback loop
    ![image-20200517133357023](lec18.assets/image-20200517133357023.png)
-
 6.  Moral 5: Into real world
    ![image-20200517133430181](lec18.assets/image-20200517133430181.png)
-
    - In real word usage, we can find the bug
-
 7. Moral 6: technical checklist
    ![image-20200517133555116](lec18.assets/image-20200517133555116.png)
-
    - Extensibility is **important**
 
+## Interface of Performance
+
+1. Three papers want to change the system call
+   ![image-20200517205648169](lec18.assets/image-20200517205648169.png)
+   - `Flexsc`: **change sys call from sync to async**
+   - MegaPipe: change syscall interface to **utilize high performant Network I/O**
+   - Make `syscall` **better on multi-core**
+2. Improve performance
+   - Sync system call is a legacy
+   - Syscall is not for high-speed net
+   - Syscall is not for multicore arch
+     - The **semantic** of syscall
+
+### FlexSC
+
+1. Sync => Expensive
+   ![image-20200517210350714](lec18.assets/image-20200517210350714.png)
+2. Processor structure pollution is **bad** !
+   ![image-20200517210431113](lec18.assets/image-20200517210431113.png)
+3. Key source of performance impact
+   ![image-20200517210537469](lec18.assets/image-20200517210537469.png)
+   - IO operation => switch process => TLB miss ...
+
+4. Exception-less syscalls
+   ![image-20200517210658024](lec18.assets/image-20200517210658024.png)
+
+   Contributions: **Exception-less sys calls** & **FlexSC-Threads**
+   ![image-20200517210738588](lec18.assets/image-20200517210738588.png)
+
    
+
+   - Use `perf` tool to find CPU inside data
+   - Core idea: async + batch processing + share memory + core specialization
+   - Complex: need to change `glibc` … Mainly reduce user-mode switch cost but not processor pollution structure cost ...
+
+   ### MegaPipe
+
+   1. Introduction
+      ![image-20200517220139486](lec18.assets/image-20200517220139486.png)
+
+      - Different message size 
+        - low message size => low throughput
+        - Large message size => low CPU usage
+
+      - Multicore => we want ideal scaling
+
+   2. BSD Socket API Performance Issues
+      ![image-20200517220548291](lec18.assets/image-20200517220548291.png)
+
+      - `listen_fd` => share data structure (write sync cost)
+      - File abstraction => VFS overhead & lock overhead
+
+      MegaPipe
+      ![image-20200517220720136](lec18.assets/image-20200517220720136.png)
+
+      - Each core has one listen socket … (reduce shared socket overhead)
+      - Bypass VFS => use light weight socket!
+
+   3. Left: traditional design, right: Mega Pipe Design
+      ![image-20200517220854823](lec18.assets/image-20200517220854823.png)
+
+   4. Completion Notification Model
+      ![image-20200517220931030](lec18.assets/image-20200517220931030.png)
+
+   5. Multicore scalability
+
+      ![image-20200517221129053](lec18.assets/image-20200517221129053.png)
+
+      
+
+   ### Commuter
+
+   1. The real bottlenecks may be in the **interface design**
+
+      ![image-20200518092653249](lec18.assets/image-20200518092653249.png)
+
+      - ‘Create(x)’ => the smallest integer as `fd`
+        - Traditional multiple `create` commands => need a global lock
+      - Now change `Create(x)` => the usable integer is OK
+        - Now parallel is possible
+
+   2. Commute rule
+      ![image-20200518093132036](lec18.assets/image-20200518093132036.png)
+
+   3. Design & Implement & Test
+      ![image-20200518093339354](lec18.assets/image-20200518093339354.png)
+
+   4. Formalizing the rule
+      ![image-20200518093519780](lec18.assets/image-20200518093519780.png)
+
+      Example
+      ![image-20200518100439076](lec18.assets/image-20200518100439076.png)
+
+       
+
+   5. An example of commuter
+      ![image-20200518101157158](lec18.assets/image-20200518101157158.png)
+
+      Using the rules to build the scalable OS
+      ![image-20200518102028758](lec18.assets/image-20200518102028758.png)
+
+       ![image-20200518102040039](lec18.assets/image-20200518102040039.png)
+
+      ![image-20200518102045682](lec18.assets/image-20200518102045682.png)
+
+   6. Refining the POSIX with the rule
+      ![image-20200518102115011](lec18.assets/image-20200518102115011.png)
+
+      
+
