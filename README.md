@@ -30,6 +30,8 @@ Case 1: [seL4](sel4/sel4.md)
 
 Case 2: [fuchsia](fuchsia/fuchsia.md)
 
+Case 3: [Linux 0.11](linux0.11/linux0.11.md)
+
 ## Reference
 
 1. [IPADS CSP](https://ipads.se.sjtu.edu.cn/courses/csp/)
