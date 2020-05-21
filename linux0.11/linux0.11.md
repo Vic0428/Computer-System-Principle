@@ -46,6 +46,53 @@ Learn the design and implementation of `Linux 0.11`
 
      - `make start` => start the `qemu`
 
+## Booting
+
+1. Build a small `bootsect.s` (end with a infinite loop)
+
+   ```assembly
+   entry _start
+   _start:
+   ! Read cursor posiiton
+       mov ah,#0x03
+       xor bh,bh
+       int 0x10
+   
+   ! Print the string in the screen
+       mov cx,#24
+       mov bx,#0x0007
+       mov bp,#msg1
+   ! es:bp : the address of string
+       mov ax,#0x07c0
+       mov es,ax
+       mov ax,#0x1301
+       int 0x10
+   
+   inf_loop:
+       jmp inf_loop
+   
+   msg1:
+   		.byte 13,10
+   		.ascii "Loading system ..."
+   		.byte 13,10,13,10
+       
+   .org 510
+   boot_flag:
+   		.word 0xAA55
+   ```
+
+   Next build the image (skip the first 32 bytes header)
+
+   ```bash
+   as86 -0 -a -o bootsect.o bootsect.s
+   ld86 -0 -s -o bootsect bootsect.o
+   dd bs=1 if=bootsect of=Image skip=32
+   ```
+
+   Now we can run `qemu` with this image
+
+   
+
 ## Reference
 
 1. [UTSC OS](http://staff.ustc.edu.cn/~ykli/os2020/)
