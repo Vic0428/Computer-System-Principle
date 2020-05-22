@@ -24,6 +24,8 @@ Lecture 17:  [The Programming Language of OS](lec17/lec17.md)
 
 Lecture 18: [The interface of OS](lec18/lec18.md)
 
+Lecture 19: [Storage system](lec19/lec19.md)
+
 ## Case study
 
 Case 1: [seL4](sel4/sel4.md)
