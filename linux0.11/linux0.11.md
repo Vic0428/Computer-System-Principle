@@ -91,8 +91,38 @@ Learn the design and implementation of `Linux 0.11`
 
    Now we can run `qemu` with this image
 
-   
+## System call
+
+If we want to add a new system call
+
+- Add definition in `include/linux/sys.h`
+
+  ```c++
+  extern int sys_iam();
+  fn_ptr sys_call_table[] = {.., ..., ..., sys_iam}
+  ```
+
+- Add system call number  in `include/unistd.h`
+
+  ```
+  #define __NR_iam	72
+  ```
+
+- Add total number of system calls `kernel/system_call.s`
+
+  ```
+  nr_system_calls = 73
+  ```
+
+- Implement `iam` system call in `kern/iam.c`
+
+- Change `kernel/Makefile`
+
+  - Use `get_fs_byte` and `put_fs_byte` to exchange data between kernel space and user space
 
 ## Reference
 
 1. [UTSC OS](http://staff.ustc.edu.cn/~ykli/os2020/)
+
+2. [HIT OS](https://hoverwinter.gitbooks.io/hit-oslab-manual/content/sy2_syscall.html)
+
