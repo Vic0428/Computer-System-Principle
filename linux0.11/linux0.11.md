@@ -120,6 +120,159 @@ If we want to add a new system call
 
   - Use `get_fs_byte` and `put_fs_byte` to exchange data between kernel space and user space
 
+## Implement semaphore
+
+We need to add new system call `sem_open`, `sem_post`, `sem_wait`, `sem_unlink`
+
+```c
+#define __LIBRARY__
+#include <unistd.h>
+#include <linux/sched.h>
+#include <linux/kernel.h>
+#include <asm/segment.h>
+#include <asm/system.h>
+
+#define SEM_COUNT 32
+
+sem_t semaphores[SEM_COUNT];
+
+#define QUE_LEN 16
+#define SEM_FAILED  (void*) 0
+struct semaphore_queue
+{
+	int front;
+	int rear;
+	struct task_struct *wait_tasks[QUE_LEN];
+};
+typedef struct semaphore_queue sem_queue;
+
+struct semaphore_t
+{
+    int value;
+    int occupied;
+    char name[16];
+    struct semaphore_queue wait_queue;
+};
+typedef struct semaphore_t sem_t;
+
+// Init queue
+void init_queue(sem_queue *q)  {
+    q->front = q->rear = 0;
+}
+
+// Check the queue is empty
+int is_empty(sem_queue *q) {
+    return q->front == q->rear? 1: 0;
+}
+
+// Check the queue is full
+int is_full(sem_queue *q) {
+    return (q->rear + 1) % QUE_LEN == q->front? 1: 0;
+}
+
+/* Get first task of task queue */
+struct task_struct* get_task(sem_queue *q) {
+    if (is_empty(q)) {
+        printk("Task queue is empty\n");
+        return NULL;
+    }
+    struct task_struct* tmp = q->wait_tasks[q->front];
+    q->front = (q->front + 1) % QUE_LEN;
+    return tmp;
+}
+
+/* Insert task into the end of task queue */
+void insert_task(sem_queue *q, struct task_struct *task) {
+    if (is_full(q)) {
+        printk("Task queue is full\n");
+        return;
+    }
+    q->wait_tasks[q->rear] = task;
+    q->rear = (q->rear + 1) % QUE_LEN;
+}
+
+/* Get sem location */
+int sem_location(const char *name) {
+    for (int i = 0; i < SEM_COUNT; i++) {
+        if (strcmp(name, semaphores[i].name) == 0 && semaphores[i].occupied == 1) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+sem_t *sys_sem_open(const char *name, unsigned int value) {
+    char tmp[16];
+    // Copy to tmp buffer
+    for (int i = 0; i < 16; i++) {
+        tmp[i] = get_fs_byte(name + i);
+        if (get_fs_byte(name + i) == '\0') {
+            break;
+        }
+    }
+    int i;
+    if ((i = sem_location(tmp)) != -1) {
+        return semaphores + i;
+    }
+    for (int i = 0; i < SEM_COUNT; i++) {
+        if (semaphores[i].occupied == 0) {
+            strcpy(semaphores[i].name, tmp);
+            semaphores[i].occupied = 1;
+            semaphores[i].value = value;
+            init_queue(&semaphores[i].wait_queue);
+            return semaphores + i;
+        }
+    }
+    return NULL;
+}
+
+int sys_sem_wait(sem_t *sem) {
+    cli();
+    sem->value--;
+    if (sem->value < 0) {
+        current->state = TASK_UNINTERRUPTIBLE;
+        insert_task(&(sem->wait_queue), current);
+        schedule();
+    }
+    sti();
+    return 0;
+}
+int sys_sem_post(sem_t *sem) {
+    cli();
+    sem->value++;
+    struct task_struct *p;
+    if (sem->value <= 0) {
+        p = get_task(&(sem->wait_queue));
+        if (p != NULL) {
+            p->state = TASK_RUNNING;
+        }
+    }
+    sti();
+    return 0;
+}
+
+int sys_sem_unlink(const char *name) {
+    char tmp[16];
+    // Copy to tmp buffer
+    for (int i = 0; i < 16; i++) {
+        tmp[i] = get_fs_byte(name + i);
+        if (get_fs_byte(name + i) == '\0') {
+            break;
+        }
+    }
+    int ret = sem_location(tmp);
+    if (ret != -1) {
+        semaphores[ret].value = 0;
+        semaphores[ret].occupied = 0;
+        strcpy(semaphores[ret].name, "\0");
+        return 0;
+    }
+    return -1;
+}
+```
+
+
+
 ## Reference
 
 1. [UTSC OS](http://staff.ustc.edu.cn/~ykli/os2020/)
