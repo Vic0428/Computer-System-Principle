@@ -120,6 +120,11 @@ If we want to add a new system call
 
   - Use `get_fs_byte` and `put_fs_byte` to exchange data between kernel space and user space
 
+## Process state control
+
+Possible process state
+![image-20200523142726001](linux0.11.assets/image-20200523142726001.png)
+
 ## Implement semaphore
 
 We need to add new system call `sem_open`, `sem_post`, `sem_wait`, `sem_unlink`
