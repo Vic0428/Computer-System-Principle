@@ -48,7 +48,7 @@
    ![image-20200523191548294](lec20.assets/image-20200523191548294.png)
 
    - All share-memory
-   - But may with different latency..
+   - But **may with different latency**..
    - Memory hierarchy comes to help!
 
    - In NUMA => 0-hop, 1-hop, 2-hop (different latency) (4x difference)
@@ -56,7 +56,7 @@
 5. How to make OS better for multicore + NUMA platform?
    ![image-20200523192102324](lec20.assets/image-20200523192102324.png)
 
-   - Can traditional abstraction scales to multiple processors?
+   - **Can traditional abstraction scales to multiple processors**?
 
    32Core + 4NUMA
    ![image-20200523192217660](lec20.assets/image-20200523192217660.png)
@@ -78,9 +78,6 @@
    ![image-20200523192944422](lec20.assets/image-20200523192944422.png)
 
    - Practical curve => **sync cost >> parallel speedup**
-
-   
-
 
 
 8. Locking / mutex / synchronization
@@ -118,15 +115,13 @@
 4. A real CPU
    ![image-20200524131150934](lec20.assets/image-20200524131150934.png)
    - n outstanding loads (stores): **ability to track n loads (stores) at the same time**, but it doesn't mean it happens in 1 cycle
-   
-     
 5. Example of incoherence
    ![image-20200523211820537](lec20.assets/image-20200523211820537.png)
 
    Define of coherence
    ![image-20200523212010209](lec20.assets/image-20200523212010209.png)
 
-   如果一个CPU 缓存了某块内存，那么在其他CPU 修改这块内存的时候，我们希望得到通知。我们拥有多组缓存的时候，真的需要它们保持同步。或者说，系统的内存在各个CPU 之间无法做到与生俱来的同步，我们实际上是需要一个大家都能遵守的方法来达到同步的目的
+   如果一个CPU 缓存了某块内存，那么在其他CPU 修改这块内存的时候，我们希望得到通知。**我们拥有多组缓存的时候，真的需要它们保持同步**。或者说，系统的内存在各个CPU 之间无法做到与生俱来的同步，我们实际上是需要一个大家都能遵守的方法来达到同步的目的
 
    ![image-20200523212248869](lec20.assets/image-20200523212248869.png)
 
@@ -178,7 +173,6 @@
      - Message it receives from other caches
    - Cache coherence with write back caches
      ![image-20200524151012787](lec20.assets/image-20200524151012787.png)
-   - 
 
 ### MSI / MESI
 
@@ -257,7 +251,69 @@
 
 ### Update based coherence
 
+1. Difference between invalidation based protocol
+   ![image-20200524192207512](lec20.assets/image-20200524192207512.png)
+   - The basic idea of update-based protocols is to **give everybody else the latest value**, so that **they don't need to reload them from main memory**, which is different from invalidation-based protocols.
+2. Dragon write back update protocol
+   ![image-20200524192311139](lec20.assets/image-20200524192311139.png)
+3. State transition diagram
+   ![image-20200524192430053](lec20.assets/image-20200524192430053.png)
+4. Invalidate VS. Update based protocols
+   ![image-20200524192729778](lec20.assets/image-20200524192729778.png)
+   - Update based protocols tend to **occupy much higher bandwidth** than invalidate protocols.
+5. ![image-20200524193024135](lec20.assets/image-20200524193024135.png)
+   - **Update is not necessarily better**. **It looks like it is better because updating makes sure there aren't as many misses**, since the most recent data is in the cache. But, in update the cache will always want to be full, which leads to updates having to be communicated across the processors, **which can be expensive**.
+6. Compare traffic
+   ![image-20200524193210448](lec20.assets/image-20200524193210448.png)
+   - Consider following two scenarios as bad for **update-based** protocol
+     - **The updated value is never read again from the various processors whose cache lines were updated**.
+     - **There are a lot of subsequent updates before the other processors read from the cache line**.
 
+### Back to reality
+
+1. Multi-level cache hierarchies
+   ![image-20200524193435035](lec20.assets/image-20200524193435035.png)
+
+   - **A multilevel cache hierarchy is a powerful tool to keep important/commonly accessed data close to the core using it**, however it can cause problems and increase overhead when it comes to maintaining cache coherence.
+
+2. Inclusion property
+   ![image-20200524193553692](lec20.assets/image-20200524193553692.png)
+
+   ![image-20200524193635078](lec20.assets/image-20200524193635078.png)
+
+3. Maintaining inclusion: **handling invalidations**
+   ![image-20200524194733289](lec20.assets/image-20200524194733289.png)
+
+   Maintaining inclusion: **L1 write hit**
+   ![image-20200524194827278](lec20.assets/image-20200524194827278.png)
+
+4. HW implications of implementing coherence
+   ![image-20200524195027624](lec20.assets/image-20200524195027624.png)
+
+5. NVIDIA GPUs don’t implement cache coherence
+   ![image-20200524195211246](lec20.assets/image-20200524195211246.png)
+
+### Implication of cache coherence to the programmer
+
+1. Artificial communication via false sharing
+   ![image-20200524195559185](lec20.assets/image-20200524195559185.png)
+
+   - **The second version is better because it reduces false sharing between threads because each thread will now have a counter on its own cache line**. In the top version many of the counters share the same cache line so when a thread updates its counter the invalidation of that line must be broadcast to all other threads and they must then get the updated data before making their own changes.
+   - And I think in order to avoid false sharing and at the same time exploit the benefit of locality, we need to put contents that will be sequentially accessed by one thread on the same cache line while putting contents that will be accessed by different threads on separate cache lines.
+
+2. Demo false sharing
+   ![image-20200524200110738](lec20.assets/image-20200524200110738.png)
+
+   False sharing explain
+   ![image-20200524202110057](lec20.assets/image-20200524202110057.png)
+
+3. Impact of cache line size on missing rate
+   ![image-20200524202356791](lec20.assets/image-20200524202356791.png)
+
+   ![image-20200524202428488](lec20.assets/image-20200524202428488.png)
+
+4. Summary snooping-based coherence
+   ![image-20200524202514253](lec20.assets/image-20200524202514253.png)
 
 ### Directory based coherence
 
@@ -274,7 +330,9 @@
    
    - n outstanding loads (stores): **ability to track n loads (stores) at the same time**, but it doesn't mean it happens in 1 cycle
 
+## Reference
 
+1. [An interesting cache coherence simulator](https://github.com/srikantaggarwal/Cache-Coherence)
 
    
 
