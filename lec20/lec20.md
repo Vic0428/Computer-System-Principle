@@ -38,7 +38,7 @@
 
    ![image-20200523191310579](lec20.assets/image-20200523191310579.png)
 
-   - Each node can SMP architecture
+   - Each node can be SMP architecture
    - Each core access memory with different latency.. => Non uniform memory access
    - CPU interconnect with other CPUs..
 
@@ -114,6 +114,7 @@
    - Read will **get the result of the last write to the memory hierarchy**
 4. A real CPU
    ![image-20200524131150934](lec20.assets/image-20200524131150934.png)
+   
    - n outstanding loads (stores): **ability to track n loads (stores) at the same time**, but it doesn't mean it happens in 1 cycle
 5. Example of incoherence
    ![image-20200523211820537](lec20.assets/image-20200523211820537.png)
@@ -209,29 +210,30 @@
    - MSI : read + write => two transactions
    
 - MSEI: read + write => one transaction
-   
+  
 - Each cache in the following states
      ![image-20200524123542230](lec20.assets/image-20200524123542230.png)
 
    - Clear explanation
   ![image-20200524123839272](lec20.assets/image-20200524123839272.png)
-   
   
-   
+  
+  
+
 ![image-20200524105533723](lec20.assets/image-20200524105533723.png)
-   
+
 ![image-20200524105554845](lec20.assets/image-20200524105554845.png)
-   
+
 ![image-20200524105736032](lec20.assets/image-20200524105736032.png)
-   
+
 ![image-20200524105900635](lec20.assets/image-20200524105900635.png)
-   
+
    ![image-20200524105947091](lec20.assets/image-20200524105947091.png)
-   
+
    ![image-20200524110156358](lec20.assets/image-20200524110156358.png)
-   
+
    ![image-20200524111108676](lec20.assets/image-20200524111108676.png)
-   
+
    ![image-20200524111133615](lec20.assets/image-20200524111133615.png)
 
 ![image-20200524111211373](lec20.assets/image-20200524111211373.png)
@@ -298,7 +300,7 @@
 1. Artificial communication via false sharing
    ![image-20200524195559185](lec20.assets/image-20200524195559185.png)
 
-   - **The second version is better because it reduces false sharing between threads because each thread will now have a counter on its own cache line**. In the top version many of the counters share the same cache line so when a thread updates its counter the invalidation of that line must be broadcast to all other threads and they must then get the updated data before making their own changes.
+   - **The second version is better because it reduces false sharing between threads because each thread will now have a counter on its own cache line**. In the top version many of the counters share the same cache line so **when a thread updates its counter the invalidation of that line must be broadcast to all other threads** and they must then get the updated data before making their own changes.
    - And I think in order to avoid false sharing and at the same time exploit the benefit of locality, we need to put contents that will be sequentially accessed by one thread on the same cache line while putting contents that will be accessed by different threads on separate cache lines.
 
 2. Demo false sharing
@@ -317,17 +319,152 @@
 
 ### Directory based coherence
 
-1. Directory based coherence
-   ![image-20200524124003379](lec20.assets/image-20200524124003379.png)
+1. Problems we need to consider
+  
+- What limits the scalability of snooping-based cache coherence protocols?
+     - **All processors/caches much communicate via the interconnect**. The interconnect traffic limits the scalability of snooping based approaches.
+- How a directory based scheme avoid this problem?
+   - How can the storage overhead of directory structure be reduced?
+     - limited pointer schemes
+     - sparse directories
+   
+2. One naive solution
+   ![image-20200525100411755](lec20.assets/image-20200525100411755.png)
+
+   ![ ](lec20.assets/image-20200525100551533.png)
 
    
 
-7. **Hardware-based cache coherence**
+3. Problem: scaling cache coherence to large machines
+   ![image-20200525091542483](lec20.assets/image-20200525091542483.png)
+
+4. NUMA systems nowadays are normal
+
+   - Multi-socket intel systems
+     ![image-20200525092120468](lec20.assets/image-20200525092120468.png)
+   - Intel’s ring interconnect (on one chip)
+     ![image-20200525092148953](lec20.assets/image-20200525092148953.png)
+
+5. Scalable cache coherence using directories
+   ![image-20200525092249742](lec20.assets/image-20200525092249742.png)
+
+   - **Directory-based vs. snooping-based cache coherence is an instance of the space-time tradeoff**. By designating directory to cache lines, directory-based coherence uses additional space to avoid the inefficient broadcasting and high latency.
+
+6. Implementing cache coherence on share-bus
+   ![image-20200525091354560](lec20.assets/image-20200525091354560.png)
+
+7. A very simple directory
+   ![image-20200525092730414](lec20.assets/image-20200525092730414.png)
+
+8. A distributed directory
+   ![image-20200525092805862](lec20.assets/image-20200525092805862.png)
+
+   ![image-20200525093156385](lec20.assets/image-20200525093156385.png)
+
+   ![image-20200525093219823](lec20.assets/image-20200525093219823.png)
+
+   ![image-20200525093316097](lec20.assets/image-20200525093316097.png)
+
+9. Advantages of directories
+   ![image-20200525094027618](lec20.assets/image-20200525094027618.png)
+
+10. Cache invalidation patterns
+   ![image-20200525094114419](lec20.assets/image-20200525094114419.png)
+
+   In general, only a few shared during a write
+   ![image-20200525094408060](lec20.assets/image-20200525094408060.png)
+
+11. Directory based coherence
+    ![image-20200524124003379](lec20.assets/image-20200524124003379.png)
+
+    
+
+1. How big is the directory?
+   ![image-20200525094502227](lec20.assets/image-20200525094502227.png)
+
+   Full-bit vector representation
+   ![image-20200525094532394](lec20.assets/image-20200525094532394.png)
+
+#### Reducing storage overhead of directory
+
+1. Full-bid vector => huge storage overhead
+   ![image-20200531112254918](lec20.assets/image-20200531112254918.png)
+
+   - Increase cache line size => painful false sharing
+
+2. Limited pointer schemes
+   ![image-20200531112441379](lec20.assets/image-20200531112441379.png)
+
+   Managing overflow of limited pointer scheme
+   ![image-20200531112719646](lec20.assets/image-20200531112719646.png)
+
+   Optimize for the common case
+   ![image-20200531112835440](lec20.assets/image-20200531112835440.png)
+
+   - This slide illustrates a key idea in Systems programming: **your solution should not be driven by its theoretical properties but rather by an careful analysis of the workload of the system**. Following the same idea, one should always **try to keep his implementations simple when a complex scheme doesn't bring extra performance**.
+
+3. Sparse directories
+   ![image-20200531113038835](lec20.assets/image-20200531113038835.png)
+
+   ![image-20200531113106957](lec20.assets/image-20200531113106957.png)
+
+    - Why doubly linked list?
+      	- Node deletion in doubly linked list only takes O(1).
+      	- On write, invalidation needs to be propagated to both directions.
+   - Scaling properties
+     ![image-20200531113604407](lec20.assets/image-20200531113604407.png)
+
+   Recall: write miss in full bit vector scheme
+   ![image-20200531113741569](lec20.assets/image-20200531113741569.png)
+
+4. Optimizing directory based coherence
+   ![image-20200531113834084](lec20.assets/image-20200531113834084.png)
+   - Limited pointer schemes take advantage of the fact that the data is probably only in a few caches at once.
+   - Sparse directories take advantage of the fact that most of memory is not resident in the cache, and the coherence protocol only needs to worry about sharing information for lines that are currently in cache.
+
+5. Recall: read miss to dirty line
+   ![image-20200531114053038](lec20.assets/image-20200531114053038.png)
+
+6. Intervention forwarding
+   ![image-20200531114211253](lec20.assets/image-20200531114211253.png)
+
+   ![image-20200531114245216](lec20.assets/image-20200531114245216.png)
+
+   		- In the normal directory based protocol, the home node responds to the requesting node with the owner's id. The requesting node then requests the data from the owner, which sends the data to both the home node and the requesting node. In the intervention forwarding optimization, however, the home node acts as a middleman by requesting data from the owner node, getting the response, and sending the response back to the requesting node.
+
+7. Request forwarding
+   ![image-20200531114451552](lec20.assets/image-20200531114451552.png)
+
+8. Intel core i7 CPU
+   ![image-20200531114611414](lec20.assets/image-20200531114611414.png)
+
+   - Only L3 cache and inclusion properties
+   - Ring connection
+
+9. Coherence in multi-socket intel systems
+   ![image-20200531115140517](lec20.assets/image-20200531115140517.png)
+
+10. Xeon Phi
+    ![image-20200531115315112](lec20.assets/image-20200531115315112.png)
+
+    ![image-20200531115351927](lec20.assets/image-20200531115351927.png)
+
+    ![image-20200531115441140](lec20.assets/image-20200531115441140.png)
+
+    ![image-20200531115525336](lec20.assets/image-20200531115525336.png)
+
+11. Summary: directory based coherency
+    ![image-20200531115605422](lec20.assets/image-20200531115605422.png)
+
+
+
+### A real CPU
+
+2. **Hardware-based cache coherence**
    - Provide **a consistent view of memory across the machine**.
    - Read will **get the result of the last write to the memory hierarchy**
-8. A real CPU
+3. A real CPU
    ![image-20200524131150934](lec20.assets/image-20200524131150934.png)
-   
    - n outstanding loads (stores): **ability to track n loads (stores) at the same time**, but it doesn't mean it happens in 1 cycle
 
 ## Reference
