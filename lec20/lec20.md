@@ -467,6 +467,68 @@
    ![image-20200524131150934](lec20.assets/image-20200524131150934.png)
    - n outstanding loads (stores): **ability to track n loads (stores) at the same time**, but it doesn't mean it happens in 1 cycle
 
+## A Basic Snooping-Based Multi-Processor Implementation
+
+1. Different between cache coherence protocols and implementation
+   - Cache coherence protocol
+     - What messages / transactions needed to be sent
+     - Messages / transactions were atomic
+2. The goals of our coherence implementation
+   - Be **correct**
+   - Achieve **high performance**
+   - **Minimize cost** (minimize amount of extra hardware needed to implement coherence)
+
+3. What we should know?
+   ![image-20200603224626745](lec20.assets/image-20200603224626745.png)
+
+   - An interconnect is the network connecting a number of clients in a parallel machine (**processors**, **caches**, **memories**)
+   - A bus is **a particular type of interconnect**
+
+   - Deadlock, livelock => program correctness
+
+     - Required conditions for deadlock
+       ![image-20200603225439374](lec20.assets/image-20200603225439374.png)
+
+     - Livelock
+       ![image-20200603230044364](lec20.assets/image-20200603230044364.png)
+     - A difference between livelock and deadlock
+       - A live lock is different from a dead lock in that, in a dead lock, everyone is simply waiting and no one is doing anything; in a live lock, at least some one is doing something, but the whole system is not making program.
+
+   - Starvation => an issue of fairness
+
+     - Starvation
+       ![image-20200603230213941](lec20.assets/image-20200603230213941.png)
+
+### A basic implementation of snooping (assuming an atomic bus)
+
+1. Consider a basic system design
+   ![image-20200603230406549](lec20.assets/image-20200603230406549.png)
+
+   - **An atomic bus allows only one channel at a time to send a message**, but everyone connected to the bus can see the message.
+
+2. Transactions on an atomic bus
+   ![image-20200603230517607](lec20.assets/image-20200603230517607.png)
+
+   - With this definition of an atomic bus, the "atom" includes the client who is granted access placing its command and data on the bus **and** other clients placing their responses on the bus. Within this atom the bus is "locked" to any other bus transaction.
+
+3. Cache miss logic on a uniprocessor
+   ![image-20200603230612167](lec20.assets/image-20200603230612167.png)
+
+4. Multi-processor cache controller behavior
+   ![image-20200603230812124](lec20.assets/image-20200603230812124.png)
+
+   ![image-20200603231029038](lec20.assets/image-20200603231029038.png)
+
+5. Reporting snoop results
+   ![image-20200603231149915](lec20.assets/image-20200603231149915.png)
+
+   Reporting snoop results: how
+   ![image-20200603231216499](lec20.assets/image-20200603231216499.png)
+   Reporting snoop results: when
+   ![image-20200603231335419](lec20.assets/image-20200603231335419.png)
+
+   
+
 ## Reference
 
 1. [An interesting cache coherence simulator](https://github.com/srikantaggarwal/Cache-Coherence)
