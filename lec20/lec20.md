@@ -527,7 +527,98 @@
    Reporting snoop results: when
    ![image-20200603231335419](lec20.assets/image-20200603231335419.png)
 
-   
+6. Handling write back of dirty cache lines
+   ![image-20200604073730847](lec20.assets/image-20200604073730847.png)
+
+7. Cache with write-back buffer
+   ![image-20200604074016751](lec20.assets/image-20200604074016751.png)
+
+8. In practice state transitions are not atomic
+   ![image-20200604074324195](lec20.assets/image-20200604074324195.png)
+
+   - An example of race condition
+     ![image-20200604074451639](lec20.assets/image-20200604074451639.png)
+
+   - Fetch deadlock
+     ![image-20200604074612057](lec20.assets/image-20200604074612057.png)
+   - Livelock
+     ![image-20200604074809854](lec20.assets/image-20200604074809854.png)
+
+9. Reminder: memory coherence
+   ![image-20200604074925146](lec20.assets/image-20200604074925146.png)
+
+10. Self check: when does a write commit?
+    ![image-20200604075036760](lec20.assets/image-20200604075036760.png)
+
+    - write-back buffer doesn't effect time of commit, this is because all processors will check the value in the write-back buffer before they check the memory, so if a processor successfully get to M state then modify a cache line, it will always be observed by other processors.
+
+11. Starvation
+    ![image-20200604080528147](lec20.assets/image-20200604080528147.png)
+
+12. Design issues
+    ![image-20200604080654602](lec20.assets/image-20200604080654602.png)
+
+13. First-half summary
+    ![image-20200604080812275](lec20.assets/image-20200604080812275.png)
+
+### Building the system around non-atomic bus transactions
+
+1. An atomic bus system creates a bottleneck in bus arbitration
+   ![image-20200604081015723](lec20.assets/image-20200604081015723.png)
+
+   - An atomic bus system creates a bottleneck in bus arbitration. In that any request a processor makes will probably have some time before it is served in which nothing else is able to be done on the bus. Since the bus is used by all processors and is a valuable resource, this is **wasting a lot of important time**.
+
+2. Review: transaction on an atomic  bus
+   ![image-20200604081123788](lec20.assets/image-20200604081123788.png)
+
+3. Split transaction bus
+   ![image-20200604081154289](lec20.assets/image-20200604081154289.png)
+
+   - The atomic bus acted as a bottleneck. So we want to be able to perform operations in between the request and response. This allows room for race conditions however. Since the atomic bus bottlenecked the timeline, it forced a serial ordering on the operations.
+
+4. New issues arise due to split transactions
+   ![image-20200604081251779](lec20.assets/image-20200604081251779.png)
+
+5. A basic design
+   ![image-20200604081348347](lec20.assets/image-20200604081348347.png)
+
+6. Initiating a request
+   ![image-20200604081416549](lec20.assets/image-20200604081416549.png)
+
+7. Read miss: cycle-by-cycle bus behavior
+   ![image-20200604081513610](lec20.assets/image-20200604081513610.png)
+   ![image-20200604081724092](lec20.assets/image-20200604081724092.png)
+
+   ![image-20200604081810404](lec20.assets/image-20200604081810404.png)
+
+8. Pipelined transactions
+   ![image-20200604081856089](lec20.assets/image-20200604081856089.png)
+
+   ![image-20200604081952683](lec20.assets/image-20200604081952683.png)
+
+9. Key issues to resolve
+   ![image-20200604082026608](lec20.assets/image-20200604082026608.png)
+
+   ![image-20200604082157580](lec20.assets/image-20200604082157580.png)
+
+   ![image-20200604082226413](lec20.assets/image-20200604082226413.png)
+
+10. Why do we have queues in a parallel system
+    ![image-20200604082328845](lec20.assets/image-20200604082328845.png)
+
+11. Multi-level cache hierarchies
+    ![image-20200604082552889](lec20.assets/image-20200604082552889.png)
+
+    Recall the fetch-deadlock problem
+    ![image-20200604082615118](lec20.assets/image-20200604082615118.png)
+
+    ![image-20200604082705698](lec20.assets/image-20200604082705698.png)
+
+    ![image-20200604082800413](lec20.assets/image-20200604082800413.png)
+
+    ![image-20200604082827426](lec20.assets/image-20200604082827426.png)
+
+12. ![image-20200604082947360](lec20.assets/image-20200604082947360.png)
 
 ## Reference
 
