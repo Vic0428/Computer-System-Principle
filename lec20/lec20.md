@@ -620,6 +620,79 @@
 
 12. ![image-20200604082947360](lec20.assets/image-20200604082947360.png)
 
+## Memory Consistency
+
+### Introduction
+
+1. Cache
+   ![image-20200612091007336](lec20.assets/image-20200612091007336.png)
+
+   Memory Consistency Model
+   ![image-20200612091035475](lec20.assets/image-20200612091035475.png)
+
+2. Coherence concerns accesses only a **single memory location**
+
+   - Making sure that caches & stale copies do not cause problems
+   - Two invariants: single-writer multiple-readers, data-value
+
+   Consistency concerns ordering for **accesses to many locations**
+
+   - Making sure that ordering does not cause problems
+
+3. Synchronization
+   ![image-20200612091340570](lec20.assets/image-20200612091340570.png)
+
+   Atomic instructions
+   ![image-20200612091403821](lec20.assets/image-20200612091403821.png)
+
+   - Test & Set algorithm
+     ![image-20200612091528819](lec20.assets/image-20200612091528819.png)
+
+   Improving performance of Sync
+   ![image-20200612091658392](lec20.assets/image-20200612091658392.png)
+
+4. Memory consistency model
+   ![image-20200612091858207](lec20.assets/image-20200612091858207.png)
+
+5. Sequential Consistency
+   ![image-20200612092104826](lec20.assets/image-20200612092104826.png)
+
+   Define the notion of order
+   ![image-20200612092430578](lec20.assets/image-20200612092430578.png)
+
+   Last in memory order
+   ![image-20200612092557229](lec20.assets/image-20200612092557229.png)
+
+6. Sequential Consistency affects performance ...
+   ![image-20200612092816649](lec20.assets/image-20200612092816649.png)
+
+   ![image-20200612092841698](lec20.assets/image-20200612092841698.png)
+
+   ![image-20200612092929566](lec20.assets/image-20200612092929566.png)
+
+   ![image-20200612092958083](lec20.assets/image-20200612092958083.png)
+
+   ![image-20200612093039338](lec20.assets/image-20200612093039338.png)
+
+7. Total Store Order Consistency
+   ![image-20200612093224557](lec20.assets/image-20200612093224557.png)
+
+   - Fence <-> memory barrier
+   - Atomic operations ..
+
+8. QUIZ
+   ![image-20200612093422733](lec20.assets/image-20200612093422733.png)
+
+   - Fence => S1 before L1 and S2 before L2 ...
+
+9. TSO implementation
+   ![image-20200612093708464](lec20.assets/image-20200612093708464.png)
+
+10. Even more relaxed ..
+    ![image-20200612093839838](lec20.assets/image-20200612093839838.png)
+
+    
+
 ## Reference
 
 1. [An interesting cache coherence simulator](https://github.com/srikantaggarwal/Cache-Coherence)
