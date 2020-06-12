@@ -632,8 +632,8 @@
 
 2. Coherence concerns accesses only a **single memory location**
 
-   - Making sure that caches & stale copies do not cause problems
-   - Two invariants: single-writer multiple-readers, data-value
+   - Making sure that caches & **stale copies** do not cause problems
+   - Two invariants: **single-writer multiple-readers**, **data-value**
 
    Consistency concerns ordering for **accesses to many locations**
 
@@ -651,10 +651,15 @@
    Improving performance of Sync
    ![image-20200612091658392](lec20.assets/image-20200612091658392.png)
 
-4. Memory consistency model
+4. An example of memory ordering
+   ![image-20200612101823689](lec20.assets/image-20200612101823689.png)
+
+   - Seeing update of counter before update of mutex ..
+
+5. Memory consistency model
    ![image-20200612091858207](lec20.assets/image-20200612091858207.png)
 
-5. Sequential Consistency
+6. Sequential Consistency
    ![image-20200612092104826](lec20.assets/image-20200612092104826.png)
 
    Define the notion of order
@@ -663,7 +668,7 @@
    Last in memory order
    ![image-20200612092557229](lec20.assets/image-20200612092557229.png)
 
-6. Sequential Consistency affects performance ...
+7. Sequential Consistency affects performance ...
    ![image-20200612092816649](lec20.assets/image-20200612092816649.png)
 
    ![image-20200612092841698](lec20.assets/image-20200612092841698.png)
@@ -674,22 +679,94 @@
 
    ![image-20200612093039338](lec20.assets/image-20200612093039338.png)
 
-7. Total Store Order Consistency
+   Realistic Memory Consistency Mode: modern hardware features can interfere with store order
+
+   - **write buffer** (or store buffer or write-behind buffer)
+     ![image-20200612102449888](lec20.assets/image-20200612102449888.png)
+     - Total order storing: Stores are guaranteed to **occur in FIFO order**
+     - Effect of write buffer: sometimes load **appears ** bypass store
+       ![image-20200612102701514](lec20.assets/image-20200612102701514.png)
+   - **instruction reordering** (out-of-order execution)
+   - **superscalar execution** and pipelining
+
+   Each CPU/core keeps its own execution consistent, but how is it viewed by others?
+
+8. Total Store Order Consistency
    ![image-20200612093224557](lec20.assets/image-20200612093224557.png)
 
    - Fence <-> memory barrier
+     ![image-20200612102743068](lec20.assets/image-20200612102743068.png)
    - Atomic operations ..
+     ![image-20200612102829765](lec20.assets/image-20200612102829765.png)
 
-8. QUIZ
+9. QUIZ
    ![image-20200612093422733](lec20.assets/image-20200612093422733.png)
 
    - Fence => S1 before L1 and S2 before L2 ...
 
-9. TSO implementation
-   ![image-20200612093708464](lec20.assets/image-20200612093708464.png)
+10. TSO implementation
+    ![image-20200612093708464](lec20.assets/image-20200612093708464.png)
 
-10. Even more relaxed ..
+11. Partial store ordering (ARM)
+    ![image-20200612102925454](lec20.assets/image-20200612102925454.png)
+
+    ![image-20200612103015336](lec20.assets/image-20200612103015336.png)
+
+12. Even more relaxed ..
     ![image-20200612093839838](lec20.assets/image-20200612093839838.png)
+
+13. Memory consistency hardware takeaway
+    ![image-20200612103103914](lec20.assets/image-20200612103103914.png)
+
+    ![image-20200612103128213](lec20.assets/image-20200612103128213.png)
+
+14. Some locks
+
+    - Spinlock
+      ![image-20200612103326737](lec20.assets/image-20200612103326737.png)
+
+      Spinning versus switching
+      ![image-20200612103423726](lec20.assets/image-20200612103423726.png)
+
+      ![image-20200612103444994](lec20.assets/image-20200612103444994.png)
+
+    - Interrupt Disabling
+      ![image-20200612103522305](lec20.assets/image-20200612103522305.png)
+
+    - Alternative to spinning
+
+      - Conditional Lock (tryLock)
+        ![image-20200612103714916](lec20.assets/image-20200612103714916.png)
+
+      - Limited time lock
+        ![image-20200612103740870](lec20.assets/image-20200612103740870.png)
+
+      - Common multiprocessor spin lock
+        ![image-20200612103805316](lec20.assets/image-20200612103805316.png)
+
+      - Compare two simple spinlocks
+
+        ```c++
+        // Test and Set
+        void lock (volatile lock_t *l) {
+        while (test_and_set(l)) ;
+        }
+        // Test and Test and Set
+        void lock (volatile lock_t *l) {
+        while (*l == BUSY || test_and_set(l)) ;
+        }
+        ```
+
+        - The second lock
+          - Avoid bus traffic contention caused by test_and_set until it is likely to succeed
+          - Normal read spins in cache 
+        - Benchmark results
+          ![image-20200612104129220](lec20.assets/image-20200612104129220.png)
+
+    - MCS locks
+      ![image-20200612104550937](lec20.assets/image-20200612104550937.png)
+
+      
 
     
 
