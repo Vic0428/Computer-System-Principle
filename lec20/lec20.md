@@ -639,7 +639,21 @@
 
    - Making sure that ordering does not cause problems
 
-3. Synchronization
+   Comparison
+   ![image-20200613221530799](lec20.assets/image-20200613221530799.png)
+
+   ![image-20200613221703718](lec20.assets/image-20200613221703718.png)
+
+   
+
+3. Why we need cache coherence and why relaxed memory consistency?
+   ![image-20200613222351478](lec20.assets/image-20200613222351478.png)
+
+   - Aggressive memory operation ordering
+     ![image-20200613222509343](lec20.assets/image-20200613222509343.png)
+   - 
+
+4. Synchronization
    ![image-20200612091340570](lec20.assets/image-20200612091340570.png)
 
    Atomic instructions
@@ -651,15 +665,15 @@
    Improving performance of Sync
    ![image-20200612091658392](lec20.assets/image-20200612091658392.png)
 
-4. An example of memory ordering
+5. An example of memory ordering
    ![image-20200612101823689](lec20.assets/image-20200612101823689.png)
 
    - Seeing update of counter before update of mutex ..
 
-5. Memory consistency model
+6. Memory consistency model
    ![image-20200612091858207](lec20.assets/image-20200612091858207.png)
 
-6. Sequential Consistency
+7. Sequential Consistency
    ![image-20200612092104826](lec20.assets/image-20200612092104826.png)
 
    Define the notion of order
@@ -668,7 +682,7 @@
    Last in memory order
    ![image-20200612092557229](lec20.assets/image-20200612092557229.png)
 
-7. Sequential Consistency affects performance ...
+8. Sequential Consistency affects performance ...
    ![image-20200612092816649](lec20.assets/image-20200612092816649.png)
 
    ![image-20200612092841698](lec20.assets/image-20200612092841698.png)
@@ -691,7 +705,7 @@
 
    Each CPU/core keeps its own execution consistent, but how is it viewed by others?
 
-8. Total Store Order Consistency
+9. Total Store Order Consistency
    ![image-20200612093224557](lec20.assets/image-20200612093224557.png)
 
    - Fence <-> memory barrier
@@ -699,28 +713,55 @@
    - Atomic operations ..
      ![image-20200612102829765](lec20.assets/image-20200612102829765.png)
 
-9. QUIZ
-   ![image-20200612093422733](lec20.assets/image-20200612093422733.png)
+10. QUIZ
+    ![image-20200612093422733](lec20.assets/image-20200612093422733.png)
 
-   - Fence => S1 before L1 and S2 before L2 ...
+    - Fence => S1 before L1 and S2 before L2 ...
 
-10. TSO implementation
+11. TSO implementation
     ![image-20200612093708464](lec20.assets/image-20200612093708464.png)
 
-11. Partial store ordering (ARM)
+12. Partial store ordering (ARM)
     ![image-20200612102925454](lec20.assets/image-20200612102925454.png)
 
     ![image-20200612103015336](lec20.assets/image-20200612103015336.png)
 
-12. Even more relaxed ..
+13. Memory Fence
+
+    - Example
+      ![image-20200613222810925](lec20.assets/image-20200613222810925.png)
+
+    Acquire and release semantics
+    ![image-20200613222949159](lec20.assets/image-20200613222949159.png)
+
+    C++11 Atomic T
+    ![image-20200613223201770](lec20.assets/image-20200613223201770.png)
+
+    
+
+14. Conflicting data access
+    ![image-20200613223253775](lec20.assets/image-20200613223253775.png)
+
+    ![image-20200613223318845](lec20.assets/image-20200613223318845.png)
+
+    Relaxed consistency
+    ![image-20200613223412321](lec20.assets/image-20200613223412321.png)
+
+    Parallel Technique
+    ![image-20200613223616869](lec20.assets/image-20200613223616869.png)
+    ![image-20200613223647072](lec20.assets/image-20200613223647072.png)
+
+    
+
+15. Even more relaxed ..
     ![image-20200612093839838](lec20.assets/image-20200612093839838.png)
 
-13. Memory consistency hardware takeaway
+16. Memory consistency hardware takeaway
     ![image-20200612103103914](lec20.assets/image-20200612103103914.png)
 
     ![image-20200612103128213](lec20.assets/image-20200612103128213.png)
 
-14. Some locks
+17. Some locks
 
     - Spinlock
       ![image-20200612103326737](lec20.assets/image-20200612103326737.png)
