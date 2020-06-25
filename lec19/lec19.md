@@ -324,9 +324,86 @@ Reference book: Memory systems, Cache, DRAM, Disk
 
    - Batch reading / writing
 
+5. I/O Controller Utilization Vs. Response Time
+   ![image-20200625234904796](lec19.assets/image-20200625234904796.png)
+
+6. Storage Design based on Application Requirements and Disk Driver Performance
+   ![image-20200626064019380](lec19.assets/image-20200626064019380.png)
+
+   - Many disks not only big storage, but also high throughput
+
+7. Data Rate: Inner vs. Outer Tracks
+   ![image-20200626064221958](lec19.assets/image-20200626064221958.png)
+
+   ![image-20200626064418844](lec19.assets/image-20200626064418844.png)
+
+   - OS view: want to see CAV disks
+   - Real view: Zoned CAV disks
+
+   Bandwidth outer track 1.7x inner track
+
 ### Disk drive firmware algorithms
 
+1. Disk driver - electronics
+   ![image-20200626064556135](lec19.assets/image-20200626064556135.png)
 
+   - DRAM different from DRAM in server
+
+2. How functionality is implemented
+   ![image-20200626064704173](lec19.assets/image-20200626064704173.png)
+
+   - ASIC logic => EE people will handle it
+   - Firmware algorithm => CS People
+
+3. Mapping LBN to sectors
+   ![image-20200626064849224](lec19.assets/image-20200626064849224.png)
+
+   Recall the physical disk
+   ![image-20200626064944019](lec19.assets/image-20200626064944019.png)
+
+   Physical sectors on a single-surface disk
+   ![image-20200626065009281](lec19.assets/image-20200626065009281.png)
+
+   - LBN-to-physical for a single surface disk
+     ![image-20200626065103910](lec19.assets/image-20200626065103910.png)
+   - Extend the mapping to a multi-surface disk
+     ![image-20200626065249133](lec19.assets/image-20200626065249133.png)
+
+4. Some real numbers of modern disk
+   ![image-20200626065413950](lec19.assets/image-20200626065413950.png)
+
+5. Complication when calc the address
+
+   - First complications : zones
+     ![image-20200626065629253](lec19.assets/image-20200626065629253.png)
+
+     Computing physical location from LBN
+     ![image-20200626065756374](lec19.assets/image-20200626065756374.png)
+
+   - Second complication: remap
+
+     - Defective sector
+     - Issues
+       - Remapped block
+       - Slipped block
+     - Compromise : remap
+     - One space sector per track
+       - LBM mapping slipped past defective sector
+         ![image-20200626070253803](lec19.assets/image-20200626070253803.png)
+       - Computing physical location from LBN
+         ![image-20200626070336389](lec19.assets/image-20200626070336389.png)
+
+   - What happens to requests that span track?
+     ![image-20200626070432946](lec19.assets/image-20200626070432946.png)
+
+     	- waste rotation latency
+
+     Third complication : skew
+     ![image-20200626070555917](lec19.assets/image-20200626070555917.png)
+
+     - Compute physical location from LBN
+       - First, figure out `cylno`, `surfaceno`, and `sectno`
+       - Then, compute total skew effect
 
 ## Local strorage system
 
