@@ -346,33 +346,31 @@ Reference book: Memory systems, Cache, DRAM, Disk
 
 1. Disk driver - electronics
    ![image-20200626064556135](lec19.assets/image-20200626064556135.png)
-
    - DRAM different from DRAM in server
-
 2. How functionality is implemented
    ![image-20200626064704173](lec19.assets/image-20200626064704173.png)
-
    - ASIC logic => EE people will handle it
    - Firmware algorithm => CS People
 
-3. Mapping LBN to sectors
-   ![image-20200626064849224](lec19.assets/image-20200626064849224.png)
+### Mapping LBN to sectors
 
-   Recall the physical disk
-   ![image-20200626064944019](lec19.assets/image-20200626064944019.png)
+![image-20200626064849224](lec19.assets/image-20200626064849224.png)
 
-   Physical sectors on a single-surface disk
-   ![image-20200626065009281](lec19.assets/image-20200626065009281.png)
+Recall the physical disk
+![image-20200626064944019](lec19.assets/image-20200626064944019.png)
 
-   - LBN-to-physical for a single surface disk
-     ![image-20200626065103910](lec19.assets/image-20200626065103910.png)
-   - Extend the mapping to a multi-surface disk
-     ![image-20200626065249133](lec19.assets/image-20200626065249133.png)
+Physical sectors on a single-surface disk
+![image-20200626065009281](lec19.assets/image-20200626065009281.png)
 
-4. Some real numbers of modern disk
+- LBN-to-physical for a single surface disk
+  ![image-20200626065103910](lec19.assets/image-20200626065103910.png)
+- Extend the mapping to a multi-surface disk
+  ![image-20200626065249133](lec19.assets/image-20200626065249133.png)
+
+1. Some real numbers of modern disk
    ![image-20200626065413950](lec19.assets/image-20200626065413950.png)
 
-5. Complication when calc the address
+2. Complication when calc the address
 
    - First complications : zones
      ![image-20200626065629253](lec19.assets/image-20200626065629253.png)
@@ -405,5 +403,63 @@ Reference book: Memory systems, Cache, DRAM, Disk
        - First, figure out `cylno`, `surfaceno`, and `sectno`
        - Then, compute total skew effect
 
-## Local strorage system
+### Disk Cache
+
+1. What’s disk cache?
+   ![image-20200626071039211](lec19.assets/image-20200626071039211.png)
+   - Buffer in the diagram
+2. Disk Cache
+   ![image-20200626071252006](lec19.assets/image-20200626071252006.png)
+   - Reduce the latency
+3. Functions 1
+   - Read-ahead
+   - Speed matching
+     - **The speed of the disk’s I/O interface** to the computer vs. t**he speed at which the bits are transferred to and from the hard disk platter**
+4. Functions 2
+   - Write acceleration
+     ![image-20200626071527234](lec19.assets/image-20200626071527234.png)
+   - Dangerous
+     ![image-20200626071551309](lec19.assets/image-20200626071551309.png)
+
+5. Function - 3
+   - Command queueing
+     ![image-20200626071637945](lec19.assets/image-20200626071637945.png)
+
+### Disk Scheduling
+
+1. Seek time scheduling
+   ![image-20200626071702692](lec19.assets/image-20200626071702692.png)
+
+2. Several traditional algorithms
+
+   - First come First Serve
+
+     ![image-20200626071909732](lec19.assets/image-20200626071909732.png)
+
+   - Shortest Seek Time First
+
+     ![image-20200626072126325](lec19.assets/image-20200626072126325.png)
+
+     - Problem starvation
+
+   - SCAN (and variations)
+
+     - SCAN
+       ![image-20200626072346497](lec19.assets/image-20200626072346497.png)
+     - C-SCAN
+       ![image-20200626072427275](lec19.assets/image-20200626072427275.png)
+
+     
+
+   - Look (and variations)
+
+     ![image-20200626072508330](lec19.assets/image-20200626072508330.png)
+
+3. Response times for random disk requests
+   ![image-20200626072731453](lec19.assets/image-20200626072731453.png)
+
+   - Look => starvation problem
+
+4. Selecting a Disk-Scheduling Algorithm
+   ![image-20200626072858747](lec19.assets/image-20200626072858747.png)
 
