@@ -236,8 +236,97 @@
 9. Cloud storage
    ![image-20200522172421823](lec19.assets/image-20200522172421823.png)
 
+## Disk Technologies
 
-## Storage hardware
+Reference book: Memory systems, Cache, DRAM, Disk
+
+1. The history of storage media
+   ![image-20200625230407772](lec19.assets/image-20200625230407772.png)
+
+   - HDD: magnetic
+   - Flash memory ==> SSD
+   - Persistent memory (NVM) => new break through
+
+2. Today we have
+
+   - HDD
+   - Flash memory
+   - Persistent Memory
+
+3. The first commercial Disk Drive
+
+   - Big size
+   - Small storage
+
+   First Air Bearing Heads (1962)
+
+   First Removable Disk Drive (1965)
+
+   First Modern Hard Disk Design (1973)
+
+   - “Winchester”
+
+   First Thin Film Heads (1979)
+
+   Giant Magneto Resistive (1997)
+
+### Disk components and their functions
+
+1. Construction and Operation
+   ![image-20200625232133186](lec19.assets/image-20200625232133186.png)
+2. Moving-head Disk Mechanism
+   ![image-20200625232536606](lec19.assets/image-20200625232536606.png)
+3. Disk Device Components
+   ![image-20200625232746914](lec19.assets/image-20200625232746914.png)
+4. Logical Block Addressing
+   ![image-20200625233042610](lec19.assets/image-20200625233042610.png)
+   - CHS: Cylinder, Head, Sector
+
+### Disk performance and how it is measured
+
+1. Performance
+
+   - Electromechanical device
+     - Impacts the overall performance of the storage system
+
+   - Disk service time
+
+     - Time taken by a disk to complete an I/O request
+
+       - Seek time (bottleneck1)
+         ![image-20200625233507010](lec19.assets/image-20200625233507010.png)
+
+         - Full stroke (from outermost to innermost)
+         - Average..
+         - From one track to another track
+
+       - Rotational latency (bottleneck2)
+
+         ![image-20200625233653177](lec19.assets/image-20200625233653177.png)
+
+       - Data transfer time 
+
+         - Data Transfer rate
+           ![image-20200625234003254](lec19.assets/image-20200625234003254.png)
+           - External rate: SATA version ..
+             External rate : lower compared to internal rate (used to calc the transfer time
+
+2. Controller overhead can be omitted...
+   ![image-20200625234122577](lec19.assets/image-20200625234122577.png)
+
+3. Where does the disk head’s time go?
+   ![image-20200625234421139](lec19.assets/image-20200625234421139.png)
+
+   - Rotational latency + seek time > accounts most of the time
+
+4. Impact of request size
+   ![image-20200625234555401](lec19.assets/image-20200625234555401.png)
+
+   - Batch reading / writing
+
+### Disk drive firmware algorithms
+
+
 
 ## Local strorage system
 
