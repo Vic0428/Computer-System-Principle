@@ -883,6 +883,36 @@
 
      ![image-20200712111929189](lec20.assets/image-20200712111929189.png)
 
+4. `std::memory_order`
+   ![image-20200712115225414](lec20.assets/image-20200712115225414.png)
+
+   - `std::memory_order_seq_cst`
+     ![image-20200712115417131](lec20.assets/image-20200712115417131.png)
+
+     
+
+   ![image-20200712115942286](lec20.assets/image-20200712115942286.png)
+
+   - `std :: memory_order_release/acquire`
+
+     - Release store & Acquire load
+       ![image-20200712120201036](lec20.assets/image-20200712120201036.png)
+
+       ![image-20200712121119252](lec20.assets/image-20200712121119252.png)
+
+     - Acquire semantic
+       ![image-20200712121314554](lec20.assets/image-20200712121314554.png)
+
+     - Release semantic
+       ![image-20200712121546535](lec20.assets/image-20200712121546535.png)
+
+     ![image-20200712121628511](lec20.assets/image-20200712121628511.png)
+
+     On different architecture
+     ![image-20200712123657889](lec20.assets/image-20200712123657889.png)
+
+     ![image-20200712123744557](lec20.assets/image-20200712123744557.png)
+
      
 
 ## Reference
