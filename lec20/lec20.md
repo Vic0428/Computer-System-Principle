@@ -809,7 +809,81 @@
 
       
 
-    
+
+## Back to the real world
+
+1. Ways to achieve synchronize with
+   ![image-20200712103744864](lec20.assets/image-20200712103744864.png)
+
+2. Real hardware & Compiler
+
+   - Real hardware doesn’t run the code that you wrote.
+   - Real compiler doesn’t produce the code that you wrote.
+
+   ![image-20200712104013758](lec20.assets/image-20200712104013758.png)
+
+   Weak & Strong
+   ![image-20200712104152024](lec20.assets/image-20200712104152024.png)
+
+   In TSO, both 0 is valid
+   ![image-20200712104924428](lec20.assets/image-20200712104924428.png)
+
+   The problem of data race
+   ![image-20200712105019967](lec20.assets/image-20200712105019967.png)
+
+   ![image-20200712105142275](lec20.assets/image-20200712105142275.png)
+
+   - Read between the 2 write 16 bits ...
+
+## C++11 Memory Model
+
+1. History
+   ![image-20200712110056987](lec20.assets/image-20200712110056987.png)
+
+2. Why C++11 Memory Model
+   ![image-20200712110230412](lec20.assets/image-20200712110230412.png)
+
+3. Happens before
+
+   - An important **fundamental concept** in understanding the memory model
+
+   - A guarantee that memory writes by **one specific statement are visible to another specific statement**
+
+   - Use memory fence to ensure this order
+
+     ```c++
+     int A, B;
+     void foo()
+     {
+     	A = B + 1;
+     	asm volatile("" ::: "memory");
+     	B = 0;
+     }
+     ```
+
+   - Atomic
+
+     ```c++
+     //x86
+     #define COMPILER_BARRIER() asm volatile("" ::: "memory")
+     //PowerPC
+     #define RELEASE_FENCE() asm volatile("lwsync" ::: "memory")
+     ==============================================
+     int Value;
+     std::atomic<int> IsPublished(0);
+     void sendValue(int x)
+     {
+       Value = x;
+       // <-- reordering is prevented here!
+       IsPublished.store(1, std::memory_order_release);
+     }
+     ```
+
+     ![image-20200712111817533](lec20.assets/image-20200712111817533.png)
+
+     ![image-20200712111929189](lec20.assets/image-20200712111929189.png)
+
+     
 
 ## Reference
 
