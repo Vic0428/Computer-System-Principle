@@ -913,7 +913,72 @@
 
      ![image-20200712123744557](lec20.assets/image-20200712123744557.png)
 
-     
+5. `std::memory_order_consume`
+
+   - Data dependency ordering
+     ![image-20200712221836677](lec20.assets/image-20200712221836677.png)
+
+     ![image-20200712221935448](lec20.assets/image-20200712221935448.png)
+
+     ![image-20200712222138835](lec20.assets/image-20200712222138835.png)
+
+   - On different architecture
+     ![image-20200712222324378](lec20.assets/image-20200712222324378.png)
+
+     ![image-20200712222432359](lec20.assets/image-20200712222432359.png)
+
+     ![image-20200712222644481](lec20.assets/image-20200712222644481.png)
+
+     ![image-20200712222704592](lec20.assets/image-20200712222704592.png)
+
+   - Real world: RCU
+     ![image-20200712223232439](lec20.assets/image-20200712223232439.png)
+
+6. `std::memory_order_relaxed`
+
+   ![image-20200712223325564](lec20.assets/image-20200712223325564.png)
+
+## Lock Free Programming
+
+1. What’s lock free programming
+   ![image-20200712223837439](lec20.assets/image-20200712223837439.png)
+
+2. Some details
+   ![image-20200712223859747](lec20.assets/image-20200712223859747.png)
+
+3. Lock Free Stack
+
+   ```
+   template<typename T>
+   class lock_free_stack
+   {
+   private:
+     struct node
+     {
+       T data;
+       node* next;
+       node(T const& data_): // 1
+       data(data_)
+       {}
+     };
+     std::atomic<node*> head;
+     public:
+     void push(T const& data)
+     {
+       node* const new_node=new node(data); // 2
+       new_node->next=head.load(); // 3
+       while(!head.compare_exchange_weak(new_node->next,new_node)); // 4
+     }
+     void pop(T& result)
+     {
+       node* old_head=head.load();
+       while(!head.compare_exchange_weak(old_head,old_head->next));
+       result=old_head->data;
+     }
+   }
+   ```
+
+   
 
 ## Reference
 
