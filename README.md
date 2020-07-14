@@ -26,6 +26,10 @@ Lecture 18: [The interface of OS](lec18/lec18.md)
 
 Lecture 19: [Storage system](lec19/lec19.md)
 
+Lecture 20: [Multicore](lec20/lec20.md)
+
+Lecture 21: [Concurrency in OS Kernel](lec21/lec21.md)
+
 ## Case study
 
 Case 1: [seL4](sel4/sel4.md)
