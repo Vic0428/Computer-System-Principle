@@ -232,7 +232,40 @@
 1. Locking strategy comparison
    ![image-20200718102529513](lec21.assets/image-20200718102529513.png)
 
+## RCU
 
+### Motivation
+
+1. Modern CPUs are predominantly **multicore**
+2. Applications rely heavily on kernel for networking, filesystem, etc.
+3. If kernel can’t scale across many cores, applications that rely on it **won’t scale either**
+4. Have to be able to **execute system calls in parallel**
+
+### Problems
+
+1. Sharing is the problems
+   - OS maintains many **data structures**
+   - They depend on locks to **maintain invariants**
+     - Sometimes, read often and write less … (even rw lock means a huge cost)
+   - Applications **may contend on locks**, limiting scalability 
+2. Read heavy data structures
+   Kernels often have data that is **read much more often than it is modified**
+   - Network tables: routing, ARP
+   - File descriptor arrays
+   - System call state
+
+### Goals
+
+1. Goals
+   - Concurrent reads even during updates
+   - Low space overhead
+   - Low execution overhead
+
+### Idea
+
+1. RCU
+   ![image-20200721213145452](lec21.assets/image-20200721213145452.png)
+2. 
 
 
 
