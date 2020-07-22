@@ -265,19 +265,49 @@
 
 1. RCU
    ![image-20200721213145452](lec21.assets/image-20200721213145452.png)
-2. 
+2. Three fundamental mechanisms
+   - Publish-Subscribe Mechanism (for insertion)
+   - Wait For Pre-Existing RCU Readers to Complete (for deletion)
+   - Maintain Multiple Versions of Recently Updated Objects (for readers)
+
+### Publish-Subscribe
+
+1. Publish
+   ![image-20200722084730357](lec21.assets/image-20200722084730357.png)
+2. Subscribe
+   ![image-20200722084809743](lec21.assets/image-20200722084809743.png)
+
+![image-20200722084818773](lec21.assets/image-20200722084818773.png)
 
 
 
+### Wait for pre-existing RCU readers to complete
 
+1. In most basic form, RCU is a way of waiting things to finish
+   ![image-20200722084914878](lec21.assets/image-20200722084914878.png)
 
+2. RCU to wait for readers
+   ![image-20200722085034835](lec21.assets/image-20200722085034835.png)
 
+   ![image-20200722085111576](lec21.assets/image-20200722085111576.png)
 
+   ![image-20200722085124529](lec21.assets/image-20200722085124529.png)
 
+   ![image-20200722085153537](lec21.assets/image-20200722085153537.png)
 
+### Maintain Multiple Versions of Recently Updated Objects
 
+1. Example: Maintaining Multiple Versions During Deletion
+   ![image-20200722085405986](lec21.assets/image-20200722085405986.png)
 
+2. Example: Maintaining Multiple Versions During Replacement
 
+   ![image-20200722085513475](lec21.assets/image-20200722085513475.png)
+
+### Conclusion
+
+1. RCU enables zero-cost read-only access at the expense of slightly more expensive updates
+2. Very useful for read-mostly data (extremely common in kernels)
 
 
 
